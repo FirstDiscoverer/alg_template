@@ -1,0 +1,29 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10MB"
+    max-file: "10"
+
+x-resources: &default-resources
+  limits:
+    cpus: "8"
+    memory: "16GB"
+
+
+services:
+  neo4j:
+    image: neo4j:5.26.4-community-bullseye
+    restart: unless-stopped
+    environment:
+      - "NEO4J_AUTH=neo4j/${NEO4J_PASSWORD}"
+    ports:
+      - "${NEO4J_PORT_7474}:7474"
+      - "${NEO4J_PORT_7687}:7687"
+    volumes:
+      - ${NEO4J_DIR}/data:/data
+      - ${NEO4J_DIR}/conf:/conf
+      - ${NEO4J_DIR}/plugins:/plugins
+      - ${NEO4J_DIR}/logs:/logs
+    deploy:
+      resources: *default-resources
+    logging: *default-logging

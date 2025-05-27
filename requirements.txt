@@ -1,0 +1,7 @@
+# Python 3.x 请注明项目Python版本
+# 注意实际开发中：所有包需指定版本
+
+# FastApi
+fastapi
+uvicorn[standard]
+markdown

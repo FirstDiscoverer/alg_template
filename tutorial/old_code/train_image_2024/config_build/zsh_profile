@@ -1,0 +1,11 @@
+
+alias grep="grep -i --color=auto"
+alias l="ls -lF" 
+alias ll="ls -alF" 
+alias gpu_info='watch -n1 --color "gpustat -cpu --color"'
+
+alias log_supervisor='cd /var/log/supervisor'
+alias log_screen='cd /var/log/screen'
+
+fastfetch
+

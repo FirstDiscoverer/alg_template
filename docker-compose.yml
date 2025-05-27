@@ -1,0 +1,40 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "128m"
+    max-file: "10"
+
+x-resources: &default-resources
+  limits: # ① a. 资源限制可根据算法占用情况决定
+    cpus: "4"
+    memory: 8G
+  reservations: # ① b. 不使用GPU直接去除
+    devices:
+      - driver: "nvidia"
+        count: "all"
+        # device_ids: ['0', '1']
+        capabilities: [ "gpu" ]
+
+
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: ./deploy/Dockerfile
+      args:
+        PYTHON_VERSION: "3.10"
+    image: alg_template:1.0     # ②【修改：项目名】
+    restart: unless-stopped
+    environment:
+      - PROFILE="test/prod" # ③ 若项目不分多环境(如test、prod)，可去除
+    ports:
+      - '23456:8080'   # ④ 注意修改端口
+    extra_hosts:
+      - "gpu1.wedoctor.server:host-gateway" # GPU部署机域名
+    # volumes:
+    #   - /workspace/docker/volume/项目名/具体目录:/具体目录   # ⑤ 若使用Volume，使用公共数据目录映射
+    deploy:
+      resources: *default-resources
+    logging: *default-logging
+
+# BUILDKIT_PROGRESS=plain docker-compose up -d --build

@@ -1,0 +1,25 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "10"
+
+x-resources: &default-resources
+  limits:
+    cpus: "8"
+    memory: 49152M
+
+services:
+  milvus-attu:
+    container_name: "milvus-attu"
+    image: zilliz/attu:v2.4.3
+    restart: unless-stopped
+    environment:
+      MILVUS_URL: "milvus.wedoctor.server:19530"
+    extra_hosts:
+      - "milvus.wedoctor.server:host-gateway"
+    ports:
+      - "3000:3000"
+    deploy:
+      resources: *default-resources
+    logging: *default-logging
