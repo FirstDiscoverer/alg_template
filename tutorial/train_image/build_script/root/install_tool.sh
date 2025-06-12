@@ -61,7 +61,7 @@ chsh -s /bin/zsh "${USER_NAME}"
 apt_get_install htop psmisc lsof rsync
 
 # 4.2 fastfetch
-apt_get_install software-properties-common
+apt_get_install gnupg2 ca-certificates apt-transport-https software-properties-common
 add-apt-repository -y ppa:zhangsongcui3371/fastfetch
 apt_get_install fastfetch
 

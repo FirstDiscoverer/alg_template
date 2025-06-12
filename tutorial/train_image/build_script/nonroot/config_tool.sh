@@ -1,7 +1,8 @@
 #!/bin/bash
 
 export MINIFORGE_DIR=${HOME}/Software/miniforge
-export GITHUB_MIRROR='https://githubfast.com'
+export GITHUB_MIRROR='https://github.com'
+#export GITHUB_MIRROR='https://githubfast.com'
 # export GITHUB_DOWN_MIRROR='https://www.ghproxy.cc/https://github.com'
 variables=("HOME" "MINIFORGE_DIR" "GITHUB_MIRROR")
 echo "================所需变量 start================"
