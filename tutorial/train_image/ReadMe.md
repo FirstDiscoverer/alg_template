@@ -11,7 +11,7 @@
 ## 1.2 镜像构建
 
 ```shell
-cd ./docker-compose/cuda-版本-miniforge
+cd ./docker-compose/cuda-版本/miniforge
 
 BUILDKIT_PROGRESS=plain docker-compose build --no-cache
 ```
@@ -37,7 +37,7 @@ BUILDKIT_PROGRESS=plain docker-compose build --no-cache
 ## 2.2 镜像构建
 
 ```shell
-cd ./docker-compose/cuda-版本-miniforge-ssh-zsh
+cd ./docker-compose/cuda-版本/miniforge-ssh-zsh
 
 BUILDKIT_PROGRESS=plain docker-compose build --no-cache
 ```

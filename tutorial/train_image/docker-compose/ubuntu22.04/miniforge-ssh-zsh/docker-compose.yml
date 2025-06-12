@@ -8,25 +8,20 @@ x-resources: &default-resources
   limits:
     cpus: "8"
     memory: 16G
-  reservations:
-    devices:
-      - driver: "nvidia"
-        count: "all"
-        capabilities: [ "gpu" ]
 
 services:
   build_service:
     build:
-      context: ../../
+      context: ../../../
       dockerfile: cuda-miniforge-ssh-zsh.Dockerfile
       args:
         # 修改镜像名 ①
-        ORIGINAL_IMAGE: "alg:cuda11.8.0-cudnn8-devel-ubuntu22.04-miniforge"
+        ORIGINAL_IMAGE: "alg:ubuntu22.04-miniforge"
       secrets: # 构建时候修改密码
         - root_password
         - user_password
     # 修改镜像名 ②
-    image: "alg:cuda11.8.0-cudnn8-devel-ubuntu22.04-miniforge-ssh-zsh"
+    image: "alg:ubuntu22.04-miniforge-ssh-zsh"
     restart: unless-stopped
     ports:
       - "22222:22"
@@ -40,8 +35,8 @@ services:
 
 secrets:
   root_password:
-    file: ../../build_config/root/secret/root_password.txt
+    file: ../../../build_config/root/secret/root_password.txt
   user_password:
-    file: ../../build_config/root/secret/user_password.txt
+    file: ../../../build_config/root/secret/user_password.txt
 
 # BUILDKIT_PROGRESS=plain docker-compose build --no-cache

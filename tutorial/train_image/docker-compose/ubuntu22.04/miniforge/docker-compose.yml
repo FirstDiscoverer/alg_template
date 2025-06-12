@@ -8,22 +8,17 @@ x-resources: &default-resources
   limits:
     cpus: "8"
     memory: 16G
-  reservations:
-    devices:
-      - driver: "nvidia"
-        count: "all"
-        capabilities: [ "gpu" ]
 
 services:
   build_service:
     build:
-      context: ../../
+      context: ../../../
       dockerfile: cuda-miniforge.Dockerfile
       args:
         # 修改镜像名 ①
-        ORIGINAL_IMAGE: "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04"
+        ORIGINAL_IMAGE: "ubuntu:22.04"
     # 修改镜像名 ②
-    image: "alg:cuda11.8.0-cudnn8-devel-ubuntu22.04-miniforge"
+    image: "alg:ubuntu22.04-miniforge"
     restart: unless-stopped
     deploy:
       resources: *default-resources
