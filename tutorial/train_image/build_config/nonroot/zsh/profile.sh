@@ -13,6 +13,9 @@ alias grep="grep -i --color=auto"
 alias l="ls -lF" 
 alias ll="ls -alF" 
 
+alias conda_clean='conda clean --all --yes --verbose'
+alias pip_clean='pip cache purge'
+
 alias log_supervisor='cd /var/log/supervisor'
 alias log_screen='cd /var/log/screen'
 
