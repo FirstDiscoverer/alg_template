@@ -5,3 +5,4 @@
 fastapi
 uvicorn[standard]
 markdown
+pygments # MD渲染
