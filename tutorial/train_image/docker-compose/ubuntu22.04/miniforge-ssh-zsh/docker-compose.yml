@@ -39,4 +39,4 @@ secrets:
   user_password:
     file: ../../../build_config/root/secret/user_password.txt
 
-# BUILDKIT_PROGRESS=plain docker-compose build --no-cache
+# docker-compose build --progress plain --no-cache

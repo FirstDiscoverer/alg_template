@@ -30,4 +30,4 @@ services:
     logging: *default-logging
     tty: true
 
-# BUILDKIT_PROGRESS=plain docker-compose build --no-cache
+#docker-compose build --progress plain --no-cache
