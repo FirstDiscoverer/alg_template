@@ -1,8 +1,10 @@
-import configparser
 import logging
 import os
 from pathlib import Path
 from typing import Dict, Union
+
+import yaml
+from deepmerge import always_merger
 
 
 class Env:
@@ -22,34 +24,41 @@ class ProfileConstant:
 
 class BaseConfig:
     # 常量
-    PROFILE: str = os.getenv(Env.PROFILE, ProfileConstant.DEV)
-    __PATH_BASE: Path = Path(__file__).resolve().parent.parent.parent
+    PROFILE: str = os.getenv(Env.PROFILE, ProfileConstant.TEST)
+    __PATH_BASE: Path = next(p.parent for p in Path(__file__).resolve().parents if p.name == 'src')
     PATH_LOG: Path = Path(os.getenv(Env.PATH_LOG, __PATH_BASE / 'logs'))
     PROJECT_NAME: str = __PATH_BASE.name
-    __CONFIG: configparser.ConfigParser = None
+    __CONFIG: Dict = None
 
     @classmethod
     def join_path(cls, *path: Union[str, Path]) -> Path:
         return cls.__PATH_BASE.joinpath(*map(str, path))
 
     @classmethod
-    def get_config(cls, return_dict: bool = False) -> Union[configparser.ConfigParser, Dict]:
+    def get_config(cls) -> Dict:
         if cls.__CONFIG is None:
             cls.__CONFIG = cls.__read_config()
-        return cls.__CONFIG if not return_dict else cls.__CONFIG.__dict__['_sections'].copy()
+        return cls.__CONFIG
 
-    def __getitem__(self, key: str) -> configparser.SectionProxy:
+    def __getitem__(self, key: str):
         return self.get_config()[key]
 
     @classmethod
-    def __read_config(cls) -> configparser.ConfigParser:
+    def __read_config(cls) -> Dict:
         profile = cls.PROFILE
         logging.warning(f'注意：当前环境为 {profile}')
-        base_config_path = cls.join_path('src', 'config', 'application.ini')
-        env_config_path = cls.join_path('src', 'config', f'application-{profile}.ini')
-        config = configparser.ConfigParser()
-        config.read([base_config_path, env_config_path], encoding='utf8')
-        # config_dict = config.__dict__['_sections'].copy()
+        base_config_path = cls.join_path('src', 'config', 'application.yaml')
+        env_config_path = cls.join_path('src', 'config', f'application-{profile}.yaml')
+
+        config = {}
+        for config_path in [base_config_path, env_config_path]:
+            if not config_path.exists():
+                raise FileNotFoundError(config_path)
+            with config_path.open(encoding='utf-8') as f:
+                config_part = yaml.safe_load(f)
+                if config_part:
+                    always_merger.merge(config, config_part)
+
         return config
 
 
@@ -60,7 +69,6 @@ class Init:
 
     @classmethod
     def init(cls):
-        # 日志初始化
         cls.init_log()
 
     @classmethod
