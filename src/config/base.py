@@ -24,7 +24,7 @@ class ProfileConstant:
 
 class BaseConfig:
     # 常量
-    PROFILE: str = os.getenv(Env.PROFILE, ProfileConstant.TEST)
+    PROFILE: str = os.getenv(Env.PROFILE, ProfileConstant.DEV)
     __PATH_BASE: Path = next(p.parent for p in Path(__file__).resolve().parents if p.name == 'src')
     PATH_LOG: Path = Path(os.getenv(Env.PATH_LOG, __PATH_BASE / 'logs'))
     PROJECT_NAME: str = __PATH_BASE.name
