@@ -200,9 +200,19 @@ sh -c "echo /opt/oracle/instantclient_21_6 > /etc/ld.so.conf.d/oracle-instantcli
 ldconfig
 ```
 
-# 3 归档问题
+# 3 已知问题
 
-## 3.1 command not found: print_icon问题
+## 3.1 `Failed to initialize NVML: Unknown Error`
+
+- 容器运行一段时间后，进入容器使用nvitop命令出现错误：`Failed to initialize NVML: Unknown Error`
+- 参考资料
+    - [Nvida Container Toolkit: Failed to initialize NVML: Unknown Error](https://forums.developer.nvidia.com/t/nvida-container-toolkit-failed-to-initialize-nvml-unknown-error/286219)
+    - [Docker使用GPU的奇技淫巧 ](https://www.cnblogs.com/azureology/p/16673192.html)
+- 临时解决办法：在宿主机重启容器
+
+# 4 归档问题
+
+## 4.1 command not found: print_icon问题
 
 问题：Windows使用XShell连接提示该问题
 
@@ -253,12 +263,12 @@ LC_ALL=
 - 最终解决
     - 已通过设置`LC_ALL`解决
 
-## 3.2 Why can't I run command “nvcc --version" in docker-CUDA Container?
+## 4.2 Why can't I run command “nvcc --version" in docker-CUDA Container?
 
 - 使用devel替代runtime
 - [Why can't I run command “nvcc --version" in docker-CUDA Container?](https://github.com/NVIDIA/nvidia-docker/issues/1160)
 
-## 3.3 supervisor经常出现错误日志
+## 4.3 supervisor经常出现错误日志
 
 - 问题：使用`docker logs -f xxxd`可看出如下错误日志：
 - ```
