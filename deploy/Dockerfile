@@ -1,4 +1,5 @@
-FROM ubuntu:22.04
+ARG ORIGINAL_IMAGE
+FROM ${ORIGINAL_IMAGE}
 
 SHELL ["/bin/bash", "-c"]
 USER root

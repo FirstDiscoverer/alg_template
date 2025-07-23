@@ -22,6 +22,8 @@ services:
       context: ./
       dockerfile: ./deploy/Dockerfile
       args:
+        ORIGINAL_IMAGE: "ubuntu:22.04"
+        # ORIGINAL_IMAGE: "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04"
         PYTHON_VERSION: "3.10"
     image: alg_template:1.0     # ②【修改：项目名】
     restart: unless-stopped
