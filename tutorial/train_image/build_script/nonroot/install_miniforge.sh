@@ -39,10 +39,14 @@ conda config --set custom_channels.simpleitk https://mirrors.bfsu.edu.cn/anacond
 # [Anaconda Extra 软件仓库镜像使用帮助](https://help.mirrors.cernet.edu.cn/anaconda-extra/)
 conda config --set custom_channels.nvidia https://mirrors.cernet.edu.cn/anaconda-extra/cloud
 
-conda clean --all --yes --verbose
 conda config --show-sources
 conda config --validate
 conda info
+
+conda update -n base -c conda-forge conda --yes --verbose
+conda info
+
+conda clean --all --yes --verbose
 
 # pip配置
 pip config set global.index-url https://mirrors.aliyun.com/pypi/simple
