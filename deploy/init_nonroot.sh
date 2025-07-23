@@ -15,7 +15,8 @@ echo "================所需变量 end  ================"
 
 which pip pip3 python python3
 
-# GPU环境构建可在这里单独构建一层
+# GPU环境构建可在这里单独构建一层。避免和后面的requirement.txt放在一起安装，因为GPU相关的耗时久
+
 # ① Tensorflow使用GPU
 # conda search tensorflow-gpu --channel conda-forge
 # conda install -n ${APP_DEPLOY_ENV} -y tensorflow-gpu==1.xxx -c conda-forge # 若Tensorflow安装找不到，确认该版本的Tensorflow是否支持当前conda环境的Python版本

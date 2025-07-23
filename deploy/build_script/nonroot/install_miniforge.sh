@@ -13,7 +13,7 @@ for var in "${variables[@]}"; do
 done
 echo "================所需变量 end  ================"
 
-MINIFORGE_DIR=${HOME}/Software/miniforge
+MINIFORGE_DIR="${HOME}/Software/miniforge"
 
 # MiniForge安装
 MINIFORGE_URL='https://mirrors.tuna.tsinghua.edu.cn/github-release/conda-forge/miniforge/LatestRelease/Miniforge3-Linux-x86_64.sh'
