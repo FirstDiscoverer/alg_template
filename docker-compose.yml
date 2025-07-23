@@ -28,7 +28,7 @@ services:
     image: alg_template:1.0     # ②【修改：项目名】
     restart: unless-stopped
     environment:
-      - PROFILE="test/prod" # ③ 若项目不分多环境(如test、prod)，可去除
+      - PROFILE="test" # ③ 若项目不分多环境(如test、prod)，可去除
     ports:
       - '23456:8080'   # ④ 注意修改端口
     extra_hosts:
