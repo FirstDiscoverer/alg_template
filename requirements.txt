@@ -4,6 +4,7 @@
 # 基础配置
 pyyaml
 deepmerge
+loguru
 
 # FastApi
 fastapi

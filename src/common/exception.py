@@ -1,7 +1,8 @@
 import asyncio
-import logging
 from enum import Enum
 from functools import wraps
+
+from loguru import logger
 
 DEFAULT_EXCEPTION_CODE, DEFAULT_EXCEPTION_MSG = '-1', '服务出现异常'
 
@@ -38,7 +39,7 @@ class MyExceptionWrapper:
     def __parse_exception(self, e: Exception):
         if isinstance(e, MyException):
             raise e
-        logging.exception(f"exception={e}")
+        logger.exception(f"exception={e}")
         if self.__add_exception:
             e_str = str(e) if str(e) else repr(e)
             msg = f"{self.__msg}, exception={e_str}"

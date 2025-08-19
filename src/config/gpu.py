@@ -9,9 +9,9 @@
 #     if 'macOS' in platform_info:
 #         if len(plaidml_packages) == 1:
 #             os.environ["KERAS_BACKEND"] = "plaidml.keras.backend"
-#             logging.info(msg % ('GPU', platform_info, 'PlaidMl', plaidml_packages[0].version))
+#             logger.info(msg % ('GPU', platform_info, 'PlaidMl', plaidml_packages[0].version))
 #         else:
-#             logging.info(msg % ('CPU', platform_info, 'PlaidMl', 'null'))
+#             logger.info(msg % ('CPU', platform_info, 'PlaidMl', 'null'))
 #     else:
 #         os.environ["CUDA_VISIBLE_DEVICES"] = Constant.CUDA_VISIBLE_DEVICES
 #
@@ -28,4 +28,4 @@
 #             gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
 #             for gpu in gpus:
 #                 tf.config.experimental.set_memory_growth(gpu, True)
-#         logging.info(msg % ('CPU', platform_info, 'CUDA', 'unKnow'))
+#         logger.info(msg % ('CPU', platform_info, 'CUDA', 'unKnow'))
