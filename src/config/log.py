@@ -79,7 +79,6 @@ class LogConfig:
         self.__initialized = True
         logger.info("日志初始化完成")
 
-
 class LogUtils:
 
     @staticmethod
