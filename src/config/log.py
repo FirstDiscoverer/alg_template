@@ -7,11 +7,15 @@ from loguru import logger
 
 
 class LogConfig:
+    __initialized = False  # 私有类属性
 
     def __init__(self, log_dir: Path):
         self.__log_dir = Path(log_dir)
 
     def init_log(self):
+        if type(self).__initialized:
+            return
+
         self.__log_dir.mkdir(parents=True, exist_ok=True)
 
         # 移除默认 stderr handler
@@ -19,7 +23,7 @@ class LogConfig:
 
         # 通用日志格式
         common_format = (
-            "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | "
+            "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | "
             "<level>{level: <8}</level> | "
             "PID:<cyan>{process.id}</cyan> TID:<cyan>{thread.id}</cyan> | "
             "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - "
@@ -32,6 +36,7 @@ class LogConfig:
             format=common_format,
             level="DEBUG",
             enqueue=True,  # ✅ 多线程+多进程安全
+            colorize=True,
         )
 
         # 文件日志配置（级别 -> retention 天数）
@@ -52,6 +57,7 @@ class LogConfig:
                 level=level,
                 format=common_format,
                 enqueue=True,  # ✅ 多进程安全
+                colorize=True,
             )
 
         # dot 专用日志，只输出 message
@@ -65,7 +71,9 @@ class LogConfig:
             filter=lambda record: record["extra"].get("name") == "dot",  # ✅ 只写入绑定 name="dot" 的日志
             enqueue=True,  # ✅ 多进程安全
         )
+
         logger.info("日志初始化完成")
+        type(self).__initialized = True
 
 
 class LogUtils:
