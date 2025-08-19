@@ -1,99 +1,89 @@
 import json
-import logging
-import logging.config as logging_config
-import threading
 from pathlib import Path
-from typing import Dict, Union
+from typing import Dict
 from unittest import TestCase
+
+from loguru import logger
 
 
 class LogConfig:
     _instance = None
-    _lock = threading.Lock()
 
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
-            with cls._lock:
-                if not cls._instance:
-                    cls._instance = super().__new__(cls)
+            cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(self, log_dir: Union[str, Path]):
-        super().__init__()
+    def __init__(self, log_dir: Path):
         self.__log_dir = Path(log_dir)
+        self.__initialized = False
 
-    def __get_file_handler_config(self, level: str, filename: str = None,
-                                  formatter: str = 'format_common', backup_count: int = 7) -> dict:
-        if not filename:
-            filename = f"{level.lower()}"
-        return {
-            'level': level,
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': str(self.__log_dir / f"{filename}.log"),
-            'when': 'D',
-            'interval': 1,
-            'backupCount': backup_count,
-            'formatter': formatter,
-            'encoding': 'utf-8',
+    def init_log(self):
+        if self.__initialized:
+            return
+
+        self.__log_dir.mkdir(parents=True, exist_ok=True)
+
+        # 移除默认 stderr handler
+        logger.remove()
+
+        # 通用日志格式
+        common_format = (
+            "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | "
+            "<level>{level: <8}</level> | "
+            "PID:<cyan>{process.id}</cyan> TID:<cyan>{thread.id}</cyan> | "
+            "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - "
+            "<level>{message}</level>"
+        )
+
+        # 控制台输出
+        logger.add(
+            sink=lambda msg: print(msg, end=""),
+            format=common_format,
+            level="DEBUG",
+            enqueue=True,  # ✅ 多线程+多进程安全
+        )
+
+        # 文件日志配置（级别 -> retention 天数）
+        file_configs = {
+            "DEBUG": 1,
+            "INFO": 7,
+            "WARNING": 7,
+            "ERROR": 14,
         }
 
-    def __get_log_config(self) -> dict:
-        log_config = {
-            'version': 1,
-            'disable_existing_loggers': False,
-            'formatters': {
-                'format_common': {
-                    # 参数介绍https://juejin.im/post/5bc2bd3a5188255c94465d31
-                    'format': '%(asctime)s - %(name)s - %(filename)s:%(funcName)s:%(lineno)d - %(levelname)s - %(message)s',
-                },
-                'format_dot': {
-                    'format': '%(message)s',
-                },
-            },
-            'handlers': {
-                'console': {
-                    'level': 'DEBUG',
-                    'class': "logging.StreamHandler",
-                    'formatter': 'format_common',
-                },
-                'file_debug': self.__get_file_handler_config(level='DEBUG', backup_count=1),
-                'file_info': self.__get_file_handler_config(level='INFO', ),
-                'file_warn': self.__get_file_handler_config(level='WARN', ),
-                'file_error': self.__get_file_handler_config(level='ERROR', backup_count=14),
-                'file_dot': self.__get_file_handler_config(level='INFO', filename='dot', formatter='format_dot',
-                                                           backup_count=7),
-            },
-            'loggers': {
-                'dot': {
-                    'level': 'INFO',
-                    'handlers': ['file_dot'],
-                    'propagate': True,
-                }
-            },
-            'root': {
-                'level': 'DEBUG',
-                'handlers': ['console', 'file_debug', 'file_info', 'file_warn', 'file_error'],
-                'propagate': True,
-            }
-        }
+        # 自动添加文件日志，多进程写同一个文件安全
+        for level, retention_days in file_configs.items():
+            logger.add(
+                self.__log_dir / f"{level.lower()}.log",
+                rotation="1 day",
+                retention=retention_days,
+                encoding="utf-8",
+                level=level,
+                format=common_format,
+                enqueue=True,  # ✅ 多进程安全
+            )
 
-        return log_config
+        # dot 专用日志，只输出 message
+        logger.add(
+            self.__log_dir / "dot.log",
+            rotation="1 day",
+            retention=7,
+            encoding="utf-8",
+            level="INFO",
+            format="{message}",
+            filter=lambda record: record["extra"].get("name") == "dot",  # ✅ 只写入绑定 name="dot" 的日志
+            enqueue=True,  # ✅ 多进程安全
+        )
 
-    def init_log(self) -> dict:
-        log_dir = self.__log_dir
-        log_dir.mkdir(parents=True, exist_ok=True)
-
-        log_config = self.__get_log_config()
-        logging_config.dictConfig(log_config)
-        return log_config
+        self.__initialized = True
 
 
 class LogUtils:
 
     @staticmethod
     def dot_log(data: Dict):
-        dot_log = logging.getLogger("dot")
-        dot_log.info(json.dumps(data, ensure_ascii=False))
+        logger.bind(name="dot").info(json.dumps(data, ensure_ascii=False))
 
 
 class LogTest(TestCase):
@@ -104,10 +94,10 @@ class LogTest(TestCase):
         log_config.init_log()
 
     def test_log(self):
-        logging.debug('debug')
-        logging.info('info')
-        logging.warning('warning')
-        logging.error('error')
+        logger.debug('debug')
+        logger.info('info')
+        logger.warning('warning')
+        logger.error('error')
 
     def test_dot_log(self):
         data = {'name': '张三'}

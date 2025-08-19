@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from loguru import logger
 from pydantic import BaseModel
 
 from src.web.common.dto import Result
@@ -14,6 +15,7 @@ class ReqInfo(BaseModel):
 
 @router.post('/my_path')
 async def controller(req_info: ReqInfo):
+    logger.info(f'controller req_info: {req_info}')
     text = req_info.text
     if text != 'hello':  # 输入校验
         raise MyException(msg='输入不是hello')

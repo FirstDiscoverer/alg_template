@@ -1,4 +1,3 @@
-import logging
 import re
 
 from fastapi import APIRouter
@@ -8,7 +7,6 @@ from starlette.responses import HTMLResponse
 
 from src.config.base import base_config
 
-logger = logging.getLogger(__name__)
 router = APIRouter()
 
 DEFAULT_MD_PATH = base_config.join_path('docs', 'Api文档.md')

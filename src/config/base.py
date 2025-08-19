@@ -1,10 +1,10 @@
-import logging
 import os
 from pathlib import Path
 from typing import Dict, Union
 
 import yaml
 from deepmerge import always_merger
+from loguru import logger
 
 
 class Env:
@@ -46,7 +46,7 @@ class BaseConfig:
     @classmethod
     def __read_config(cls) -> Dict:
         profile = cls.PROFILE
-        logging.warning(f'注意：当前环境为 {profile}')
+        logger.info(f'注意：当前环境为 {profile}')
         base_config_path = cls.join_path('src', 'config', 'application.yaml')
         env_config_path = cls.join_path('src', 'config', f'application-{profile}.yaml')
 
@@ -72,7 +72,7 @@ class Init:
         cls.init_log()
 
     @classmethod
-    def init_log(cls) -> dict:
+    def init_log(cls):
         from src.config.log import LogConfig
         log_dir = BaseConfig.PATH_LOG
         config = LogConfig(log_dir)
