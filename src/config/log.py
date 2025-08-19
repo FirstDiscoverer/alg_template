@@ -7,21 +7,11 @@ from loguru import logger
 
 
 class LogConfig:
-    _instance = None
-
-    def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            cls._instance = super().__new__(cls)
-        return cls._instance
 
     def __init__(self, log_dir: Path):
         self.__log_dir = Path(log_dir)
-        self.__initialized = False
 
     def init_log(self):
-        if self.__initialized:
-            return
-
         self.__log_dir.mkdir(parents=True, exist_ok=True)
 
         # 移除默认 stderr handler
@@ -75,9 +65,8 @@ class LogConfig:
             filter=lambda record: record["extra"].get("name") == "dot",  # ✅ 只写入绑定 name="dot" 的日志
             enqueue=True,  # ✅ 多进程安全
         )
-
-        self.__initialized = True
         logger.info("日志初始化完成")
+
 
 class LogUtils:
 
