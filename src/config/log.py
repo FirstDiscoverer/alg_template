@@ -1,94 +1,98 @@
 import json
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Union
 from unittest import TestCase
 
 from loguru import logger
 
 
 class LogConfig:
-    __initialized = False  # 私有类属性
+    __initialized = False
 
-    def __init__(self, log_dir: Path):
-        self.__log_dir = Path(log_dir)
+    def __new__(cls, *args, **kwargs):
+        raise RuntimeError('请使用 init() 初始化')
 
-    def init_log(self):
-        if type(self).__initialized:
+    @classmethod
+    def init(cls, log_dir: Union[Path, str]):
+        logger.debug('loguru初始化 start')
+        if cls.__initialized:
+            logger.warning('loguru初始化 重复')
             return
 
-        self.__log_dir.mkdir(parents=True, exist_ok=True)
+        log_dir = Path(log_dir)
+        log_dir.mkdir(parents=True, exist_ok=True)
 
         # 移除默认 stderr handler
         logger.remove()
 
         # 通用日志格式
         common_format = (
-            "<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | "
-            "<level>{level: <8}</level> | "
-            "PID:<cyan>{process.id}</cyan> TID:<cyan>{thread.id}</cyan> | "
-            "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - "
-            "<level>{message}</level>"
+            '<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | '
+            '<level>{level: <8}</level> | '
+            'PID:<cyan>{process.id}</cyan> TID:<cyan>{thread.id}</cyan> | '
+            '<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - '
+            '<level>{message}</level>'
         )
 
         # 控制台输出
         logger.add(
-            sink=lambda msg: print(msg, end=""),
+            sink=lambda msg: print(msg, end=''),
             format=common_format,
-            level="DEBUG",
+            level='DEBUG',
             enqueue=True,  # ✅ 多线程+多进程安全
             colorize=True,
         )
 
         # 文件日志配置（级别 -> retention 天数）
         file_configs = {
-            "DEBUG": 1,
-            "INFO": 7,
-            "WARNING": 7,
-            "ERROR": 14,
+            'DEBUG': 1,
+            'INFO': 7,
+            'WARNING': 7,
+            'ERROR': 14,
         }
 
         # 自动添加文件日志，多进程写同一个文件安全
         for level, retention_days in file_configs.items():
             logger.add(
-                self.__log_dir / f"{level.lower()}.log",
-                rotation="1 day",
+                log_dir / f'{level.lower()}.log',
+                rotation='1 day',
                 retention=retention_days,
-                encoding="utf-8",
+                encoding='utf-8',
                 level=level,
                 format=common_format,
+                filter=lambda record: record['extra'].get('name') != 'dot',
                 enqueue=True,  # ✅ 多进程安全
                 colorize=True,
             )
 
         # dot 专用日志，只输出 message
         logger.add(
-            self.__log_dir / "dot.log",
-            rotation="1 day",
+            log_dir / 'dot.log',
+            rotation='1 day',
             retention=7,
-            encoding="utf-8",
-            level="INFO",
-            format="{message}",
-            filter=lambda record: record["extra"].get("name") == "dot",  # ✅ 只写入绑定 name="dot" 的日志
+            encoding='utf-8',
+            level='INFO',
+            format='{message}',
+            filter=lambda record: record['extra'].get('name') == 'dot',  # ✅ 只写入绑定 name='dot' 的日志
             enqueue=True,  # ✅ 多进程安全
         )
 
-        logger.info("日志初始化完成")
-        type(self).__initialized = True
+        cls.__initialized = True
+        logger.debug('loguru初始化 end')
 
 
 class LogUtils:
 
     @staticmethod
     def dot_log(data: Dict):
-        logger.bind(name="dot").info(json.dumps(data, ensure_ascii=False))
+        logger.bind(name='dot').info(json.dumps(data, ensure_ascii=False))
 
 
 class LogTest(TestCase):
 
     def setUp(self):
-        log_dir = Path(__file__).resolve().parent.parent.parent / 'logs'
-        log_config = LogConfig(log_dir)
-        log_config.init_log()
+        log_dir = next(p.parent for p in Path(__file__).resolve().parents if p.name == 'src') / 'logs'
+        LogConfig.init(log_dir)
 
     def test_log(self):
         logger.debug('debug')

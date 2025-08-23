@@ -7,4 +7,4 @@ class BaseTest(TestCase):
 
     def setUp(self):
         super().setUp()
-        Init.init_log()
+        Init.init()
