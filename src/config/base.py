@@ -88,6 +88,6 @@ class BaseConfig:
 class Init:
 
     @classmethod
-    def init(cls, log_dir=BaseConfig.PATH_LOG):
-        LogConfig.init(log_dir)
+    def init(cls, log_dir=BaseConfig.PATH_LOG, clear_old_log: bool = False):
+        LogConfig.init(log_dir, clear_old_log)
         BaseConfig.init()

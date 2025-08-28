@@ -1,4 +1,5 @@
 import json
+import shutil
 from pathlib import Path
 from typing import Dict, Union
 from unittest import TestCase
@@ -13,13 +14,16 @@ class LogConfig:
         raise RuntimeError('请使用 init() 初始化')
 
     @classmethod
-    def init(cls, log_dir: Union[Path, str]):
+    def init(cls, log_dir: Union[Path, str], clear_old_log: bool = False):
         logger.debug('loguru初始化 start')
         if cls.__initialized:
             logger.warning('loguru初始化 重复')
             return
 
         log_dir = Path(log_dir)
+        if clear_old_log:
+            logger.info(f"清除旧日志: {log_dir}")
+            shutil.rmtree(log_dir, ignore_errors=True)
         log_dir.mkdir(parents=True, exist_ok=True)
 
         # 移除默认 stderr handler
