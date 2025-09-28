@@ -42,6 +42,10 @@ class BaseConfig:
         return cls.__PATH_BASE.joinpath(*map(str, path))
 
     @classmethod
+    def remove_base_dir(cls, path: Union[str, Path]) -> Path:
+        return Path(path).relative_to(cls.__PATH_BASE)
+
+    @classmethod
     def get_config(cls) -> Dict:
         # 从环境变量里读配置。原因：防止在多进程下重复加载配置文件
         if cls.__CONFIG is None:
