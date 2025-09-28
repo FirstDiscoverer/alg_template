@@ -16,6 +16,7 @@ echo "================所需变量 end  ================"
 MINIFORGE_DIR="${HOME}/Software/miniforge"
 
 # MiniForge安装
+# MINIFORGE_URL="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
 MINIFORGE_URL='https://mirrors.tuna.tsinghua.edu.cn/github-release/conda-forge/miniforge/LatestRelease/Miniforge3-Linux-x86_64.sh'
 MINIFORGE_SAVE_PATH="/tmp/miniforge.sh"
 
