@@ -4,6 +4,10 @@ FROM ${ORIGINAL_IMAGE}
 SHELL ["/bin/bash", "-c"]
 USER root
 
+ARG ENABLE_CHINA_MIRROR=true
+# 转成环境变量，后续所有 RUN / shell 脚本都能直接用
+ENV ENABLE_CHINA_MIRROR=${ENABLE_CHINA_MIRROR}
+
 # 1. 基础系统环境。不建议进行改动
 RUN --mount="type=bind,source=deploy/build_script/root/install_system.sh,target=run.sh" \
     bash run.sh
@@ -53,7 +57,7 @@ RUN --mount="type=bind,source=requirements.txt,target=requirements.txt" \
     which pip && pip install -r requirements.txt --retries=3 --timeout=30 --no-cache-dir
 
 # 复制代码
-ENV PYTHONPATH "${DEPLOY_DIR}"
+ENV PYTHONPATH="${DEPLOY_DIR}"
 COPY --chown="${USER_NAME}:${USER_NAME}" . .
 # ④ 项目的启动初始化
 RUN chmod +x deploy/start.sh
