@@ -184,7 +184,8 @@ secrets:
 services:
   【名字拼音缩写，如lx】_train:
     extra_hosts:
-      - "gpu1.wedoctor.server:host-gateway" # 当前主机
+      - "host.docker.internal:host-gateway" # 当前主机
+      - "gpu1.wedoctor.server:192.168.3.239" # 其他主机
       - "gpu2.wedoctor.server:192.168.3.28" # 其他主机
 ```
 
