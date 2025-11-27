@@ -12,5 +12,5 @@ my_app.include_router(md.router)
 my_app.include_router(biz.router)
 
 if __name__ == '__main__':
-    Init.init_log()
+    Init.init()
     uvicorn.run(app='src.web.common.constant:my_app', host="0.0.0.0", port=8080, workers=1, )
