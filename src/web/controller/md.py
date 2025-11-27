@@ -5,11 +5,11 @@ from markdown import markdown
 from pygments.formatters.html import HtmlFormatter
 from starlette.responses import HTMLResponse
 
-from src.config.base import base_config
+from src.config.base import BaseConfig
 
 router = APIRouter()
 
-DEFAULT_MD_PATH = base_config.join_path('docs', 'Api文档.md')
+DEFAULT_MD_PATH = BaseConfig.join_path('docs', 'Api文档.md')
 
 
 def get_md_html(path=DEFAULT_MD_PATH):
