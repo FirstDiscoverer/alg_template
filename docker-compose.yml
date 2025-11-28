@@ -41,4 +41,5 @@ services:
       resources: *default-resources
     logging: *default-logging
 
-# BUILDKIT_PROGRESS=plain docker-compose up -d --build
+# docker-compose build --progress=plain
+# docker-compose up -d
