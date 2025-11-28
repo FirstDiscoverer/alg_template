@@ -33,7 +33,8 @@ services:
     ports:
       - '23456:8080'   # ④ 注意修改端口
     extra_hosts:
-      - "gpu1.wedoctor.server:host-gateway" # GPU部署机域名
+      - "host.docker.internal:host-gateway" # 所在主机
+      - "api.test.local:192.168.xxx.xxx" # 其他IP的域名映射
     # volumes:
     #   - /workspace/docker/volume/项目名/具体目录:/具体目录   # ⑤ 若使用Volume，使用公共数据目录映射
     deploy:
