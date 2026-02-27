@@ -1,10 +1,11 @@
 import uvicorn
+from fastapi import FastAPI
 
 from src.config.base import BaseConfig, Init, ProfileConstant
 from src.web.common.init_app import init_app
 
 
-def create_app():
+def create_app() -> FastAPI:
     # 1. 先初始化配置
     Init.init()
     my_app = init_app()
