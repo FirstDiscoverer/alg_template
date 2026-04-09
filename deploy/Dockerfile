@@ -1,12 +1,14 @@
-ARG ORIGINAL_IMAGE
+ARG ORIGINAL_IMAGE="ubuntu:22.04"
 FROM ${ORIGINAL_IMAGE}
 
 SHELL ["/bin/bash", "-c"]
 USER root
 
 ARG ENABLE_CHINA_MIRROR=true
+ARG ENABLE_UV=true
 # 转成环境变量，后续所有 RUN / shell 脚本都能直接用
 ENV ENABLE_CHINA_MIRROR=${ENABLE_CHINA_MIRROR}
+ENV ENABLE_UV=${ENABLE_UV}
 
 # 1. 基础系统环境。不建议进行改动
 RUN --mount="type=bind,source=deploy/build_script/root/install_system.sh,target=run.sh" \
@@ -53,8 +55,9 @@ RUN --mount="type=bind,source=deploy/init_root.sh,target=run.sh" \
 USER ${USER_NAME}
 RUN --mount="type=bind,source=deploy/init_nonroot.sh,target=run.sh" \
     bash run.sh
-RUN --mount="type=bind,source=requirements.txt,target=requirements.txt" \
-    which pip && pip install -r requirements.txt --retries=3 --timeout=30 --no-cache-dir
+RUN --mount="type=bind,source=requirements.txt,target=/tmp/requirements.txt" \
+    --mount="type=bind,source=deploy/init_requirements.sh,target=run.sh" \
+    bash run.sh
 
 # 复制代码
 ENV PYTHONPATH="${DEPLOY_DIR}"

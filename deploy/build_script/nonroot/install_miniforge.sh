@@ -12,6 +12,8 @@ for var in "${variables[@]}"; do
     fi
 done
 echo "================所需变量 end  ================"
+
+echo "使用国内源: ${ENABLE_CHINA_MIRROR}"
 # MiniForge安装
 MINIFORGE_DIR="${HOME}/Software/miniforge"
 MINIFORGE_URL="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
