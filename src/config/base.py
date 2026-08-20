@@ -27,15 +27,21 @@ class ProfileConstant:
 
 
 class BaseConfig:
-    PROFILE: str = os.getenv(Env.PROFILE, ProfileConstant.DEV)
     __PATH_BASE: Path = next(p.parent for p in Path(__file__).resolve().parents if p.name == 'src')
-    PATH_LOG: Path = Path(os.getenv(Env.PATH_LOG, __PATH_BASE / 'logs'))
     PROJECT_NAME: str = __PATH_BASE.name
     __CONFIG: Dict = None
     __initialized = False
 
     def __new__(cls, *args, **kwargs):
         raise RuntimeError('请使用 get_config() 获取配置')
+
+    @staticmethod
+    def profile() -> str:
+        return os.getenv(Env.PROFILE, ProfileConstant.DEV)
+
+    @classmethod
+    def log_dir(cls) -> Path:
+        return Path(os.getenv(Env.PATH_LOG, cls.__PATH_BASE / 'logs'))
 
     @classmethod
     def join_path(cls, *path: Union[str, Path]) -> Path:
@@ -57,7 +63,7 @@ class BaseConfig:
 
     @classmethod
     def __read_config(cls) -> Dict:
-        profile = cls.PROFILE
+        profile = cls.profile()
         logger.info(f'注意：当前环境为 {profile}')
         base_config_path = cls.join_path('src', 'config', 'application.yaml')
         env_config_path = cls.join_path('src', 'config', f'application-{profile}.yaml')
@@ -92,6 +98,8 @@ class BaseConfig:
 class Init:
 
     @classmethod
-    def init(cls, log_dir=BaseConfig.PATH_LOG, clear_old_log: bool = False):
+    def init(cls, log_dir: Path = None, clear_old_log: bool = False):
+        if log_dir is None:
+            log_dir = BaseConfig.log_dir()
         LogConfig.init(log_dir, clear_old_log)
         BaseConfig.init()
