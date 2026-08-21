@@ -1,0 +1,28 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "128m"
+    max-file: "10"
+
+x-resources: &default-resources
+  limits:
+    cpus: "8"
+    memory: 16G
+
+services:
+  build_service:
+    build:
+      context: ../../../
+      dockerfile: cuda-miniforge.Dockerfile
+      args:
+        # 修改镜像名 ①
+        ORIGINAL_IMAGE: "ubuntu:22.04"
+    # 修改镜像名 ②
+    image: "alg:ubuntu22.04-miniforge"
+    restart: unless-stopped
+    deploy:
+      resources: *default-resources
+    logging: *default-logging
+    tty: true
+
+# docker-compose build --progress plain --no-cache

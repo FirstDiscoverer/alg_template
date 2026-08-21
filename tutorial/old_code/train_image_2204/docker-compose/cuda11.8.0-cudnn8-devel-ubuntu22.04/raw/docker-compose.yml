@@ -1,0 +1,25 @@
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "128m"
+    max-file: "10"
+
+x-resources: &default-resources
+  limits:
+    cpus: "8"
+    memory: 16G
+  reservations:
+    devices:
+      - driver: "nvidia"
+        count: "all"
+        capabilities: [ "gpu" ]
+
+services:
+  build_service:
+    image: "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04"
+    restart: unless-stopped
+    deploy:
+      resources: *default-resources
+    logging: *default-logging
+    tty: true
+
