@@ -1,4 +1,5 @@
 import json
+import os
 import shutil
 from pathlib import Path
 from typing import Dict, Union
@@ -8,26 +9,32 @@ from loguru import logger
 
 
 class LogConfig:
-    __initialized = False
+    __initialized_pid = None  # 记录当前进程空间内初始化的 PID
+    __has_ever_initialized = False  # 标记当前内存链中是否曾被初始化过
 
     def __new__(cls, *args, **kwargs):
         raise RuntimeError('请使用 init() 初始化')
 
     @classmethod
     def init(cls, log_dir: Union[Path, str], clear_old_log: bool = False):
+        current_pid = os.getpid()
         logger.debug('loguru初始化 start')
-        if cls.__initialized:
-            logger.warning('loguru初始化 重复')
+
+        # 1. 当前进程已经初始化过，重复拦截
+        if cls.__initialized_pid == current_pid:
+            logger.warning(f'loguru初始化 重复 [PID: {current_pid}]')
             return
 
         log_dir = Path(log_dir)
-        if clear_old_log:
+        # 2. 清理日志逻辑：只有【最顶层主进程（首次初始化）】且 clear_old_log=True 时才清理
+        # 子进程由于继承了父进程 __has_ever_initialized = True 的内存快照，必定为 False，绝对不会误删
+        if clear_old_log and not cls.__has_ever_initialized:
             logger.info(f"清除旧日志: {log_dir}")
             shutil.rmtree(log_dir, ignore_errors=True)
+
         log_dir.mkdir(parents=True, exist_ok=True)
 
-        # 移除默认 stderr handler
-        logger.remove()
+        logger.remove()  # 3. 移除当前进程继承的 Handler，重新配置
 
         # 通用日志格式
         common_format = (
@@ -81,8 +88,10 @@ class LogConfig:
             enqueue=True,  # ✅ 多进程安全
         )
 
-        cls.__initialized = True
-        logger.debug('loguru初始化 end')
+        # 4. 更新内存状态
+        cls.__initialized_pid = current_pid
+        cls.__has_ever_initialized = True  # 标记已初始化过（子进程会继承此 True 标识）
+        logger.debug(f'loguru初始化 end [PID: {current_pid}]')
 
 
 class LogUtils:

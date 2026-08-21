@@ -30,7 +30,7 @@ class BaseConfig:
     __PATH_BASE: Path = next(p.parent for p in Path(__file__).resolve().parents if p.name == 'src')
     PROJECT_NAME: str = __PATH_BASE.name
     __CONFIG: Dict = None
-    __initialized = False
+    __initialized_pid = None  # 记录当前进程 PID
 
     def __new__(cls, *args, **kwargs):
         raise RuntimeError('请使用 get_config() 获取配置')
@@ -85,13 +85,24 @@ class BaseConfig:
         """
         主进程里调用，把配置写入环境变量
         """
-        logger.debug('config初始化 start')
-        if cls.__initialized:
-            logger.warning('config初始化 重复')
+        current_pid = os.getpid()
+        # 1. 同一进程重复调用，直接拦截
+        if cls.__initialized_pid == current_pid:
+            logger.warning(f'config初始化 重复 [PID: {current_pid}]')
             return
+
+        # 2. 如果环境变量已有配置（说明主进程已初始化过），子进程直接标记并返回，不做任何多余操作
+        if os.getenv(Env.CONFIG_JSON):
+            cls.__initialized_pid = current_pid
+            return
+
+        # 3. 只有主进程首次调用时执行：读取 YAML 并写入环境变量与内存
+        logger.debug('config初始化 start')
         config = cls.__read_config()
+        cls.__CONFIG = config
         os.environ[Env.CONFIG_JSON] = json.dumps(config, ensure_ascii=False)
-        cls.__initialized = True
+
+        cls.__initialized_pid = current_pid
         logger.debug('config初始化 end')
 
 
