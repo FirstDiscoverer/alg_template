@@ -18,7 +18,7 @@ BUILDKIT_PROGRESS=plain docker-compose build --no-cache
 
 - 若要修改CUDA版本
     - build.args中的`ORIGINAL_IMAGE`
-        - CUDA 11及其以上：查看[nvidia/cuda](https://hub.docker.com/r/nvidia/cuda/tags)，例如：`nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04`
+        - CUDA 11及其以上：查看[nvidia/cuda](https://hub.docker.com/r/nvidia/cuda/tags)，例如：`nvidia/cuda:13.3.1-cudnn-devel-ubuntu26.04`
         - CUDA 10：`sitonholy/cuda:10.0-cudnn7-devel-ubuntu18.04`
     - 修改要构建的image名称，与`ORIGINAL_IMAGE`对应
 

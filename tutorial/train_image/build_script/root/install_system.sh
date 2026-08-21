@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # 1. 镜像源
-cp /etc/apt/sources.list /etc/apt/sources.list.bakup
-sed -i 's/archive.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list
-sed -i 's/security.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list
+cp /etc/apt/sources.list.d/ubuntu.sources /etc/apt/sources.list.d/ubuntu.sources.backup
+sed -i 's|http://archive.ubuntu.com/ubuntu/|https://mirrors.bfsu.edu.cn/ubuntu|g' /etc/apt/sources.list.d/ubuntu.sources
+sed -i 's|http://security.ubuntu.com/ubuntu/|https://mirrors.bfsu.edu.cn/ubuntu|g' /etc/apt/sources.list.d/ubuntu.sources
 
 cd /etc/apt/sources.list.d || exit
 # 去除CUDA镜像源避免后续apt更新
@@ -17,11 +17,11 @@ done
 
 # 2. dist-upgrade
 apt-get clean && apt-get update -y -q
-# 静默升级，防止打断。--force-confdef：让 dpkg 自动使用默认处理方式，而不再反复询问。--force-confold：在发现当前系统的配置文件与新版本冲突时，自动保留你当前的“旧”配置文件。
+# 静默升级，防止打断。--force-confdef：让 dpkg 自动使用默认处理方式，而不再反复询问。--force-confold：在发现当前系统的配置文件与新版本冲突时，自动保留你当前的“旧”配置文件。--force-confnew 检测到冲突时，强制使用软件官方的新配置文件覆盖
 DEBIAN_FRONTEND=noninteractive \
-     apt-get dist-upgrade -y -q \
-     -o Dpkg::Options::="--force-confdef" \
-     -o Dpkg::Options::="--force-confold"
+  apt-get dist-upgrade -y -q \
+    -o Dpkg::Options::="--force-confdef" \
+    -o Dpkg::Options::="--force-confnew"
 
 # 3. 常规软件安装
 apt-get clean && apt-get update -y -qq && apt-get upgrade -y -qq

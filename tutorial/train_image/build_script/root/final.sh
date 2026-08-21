@@ -16,7 +16,7 @@ echo "================所需变量 end  ================"
 # 1. 保存镜像的环境变量到文件。解决在用户在ssh登陆后LC_ALL等环境变量缺失
 export DOCKER_ENV_PATH=/etc/zsh/my_docker.env
 # HOME必须排除了，否则会污染非ROOT用户；PWD也必须排除，否则oh-my-zsh在ssh登陆后显示的目录为这个变量值
-tr '\0' '\n' < /proc/1/environ | grep -Ev '^(HOME|PWD|HOSTNAME)' > ${DOCKER_ENV_PATH}
+tr '\0' '\n' < /proc/1/environ | grep -Ev '^(HOME|PWD|HOSTNAME|USER|UID|GID|PASSWORD|SHLVL|_|DEBIAN_FRONTEND|CMD)=' > ${DOCKER_ENV_PATH}
 cp /etc/zsh/zshenv /etc/zsh/zshenv.backup
 echo >> /etc/zsh/zshenv
 
