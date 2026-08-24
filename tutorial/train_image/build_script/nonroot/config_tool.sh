@@ -41,11 +41,11 @@ ZSH_PLUGIN_AUTOSUGGESTIONS="${ZSH_CUSTOM_PLUGIN_DIR}/zsh-autosuggestions"
 ZSH_PLUGIN_SYNTAX_HIGHLIGHTING="${ZSH_CUSTOM_PLUGIN_DIR}/zsh-syntax-highlighting"
 ZSH_THEME_POWERLEVEL9K="${ZSH_CUSTOM_DIR}/themes/powerlevel9k"
 
-git clone ${GITHUB_MIRROR}/ohmyzsh/ohmyzsh.git ${OH_MY_ZSH_DIR} || { echo "git clone失败"; exit 1; }
+git clone ${GITHUB_MIRROR}/ohmyzsh/ohmyzsh.git ${OH_MY_ZSH_DIR} || { echo "git clone ohmyzsh 失败"; exit 1; }
 # git clone https://mirrors.tuna.tsinghua.edu.cn/git/ohmyzsh.git "${OH_MY_ZSH_DIR}" || { echo "git clone失败"; exit 1; }
-git clone ${GITHUB_MIRROR}/zsh-users/zsh-autosuggestions.git "${ZSH_PLUGIN_AUTOSUGGESTIONS}" || { echo "git clone失败"; exit 1; }
-git clone ${GITHUB_MIRROR}/zsh-users/zsh-syntax-highlighting.git "${ZSH_PLUGIN_SYNTAX_HIGHLIGHTING}" || { echo "git clone失败"; exit 1; }
-git clone ${GITHUB_MIRROR}/Powerlevel9k/powerlevel9k.git "${ZSH_THEME_POWERLEVEL9K}" || { echo "git clone失败"; exit 1; }
+git clone ${GITHUB_MIRROR}/zsh-users/zsh-autosuggestions.git "${ZSH_PLUGIN_AUTOSUGGESTIONS}" || { echo "git clone zsh-autosuggestions失败"; exit 1; }
+git clone ${GITHUB_MIRROR}/zsh-users/zsh-syntax-highlighting.git "${ZSH_PLUGIN_SYNTAX_HIGHLIGHTING}" || { echo "git clone zsh-syntax-highlighting失败"; exit 1; }
+git clone ${GITHUB_MIRROR}/Powerlevel9k/powerlevel9k.git "${ZSH_THEME_POWERLEVEL9K}" || { echo "git clone powerlevel9k失败"; exit 1; }
 
 cp "${OH_MY_ZSH_DIR}/templates/zshrc.zsh-template" "${ZSHRC_PATH}"
 sed -i '/^export ZSH=/ s/^/# /' "${ZSHRC_PATH}"
