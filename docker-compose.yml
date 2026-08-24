@@ -8,12 +8,12 @@ x-resources: &default-resources
   limits: # ① a. 资源限制可根据算法占用情况决定
     cpus: "4"
     memory: 8G
-  reservations: # ① b. 不使用GPU直接去除
-    devices:
-      - driver: "nvidia"
-        count: "all"
-        # device_ids: ['0', '1']
-        capabilities: [ "gpu" ]
+#  reservations: # ① b. 不使用GPU直接去除
+#    devices:
+#      - driver: "nvidia"
+#        count: "all"
+#        # device_ids: ['0', '1']
+#        capabilities: [ "gpu" ]
 
 
 services:
@@ -22,9 +22,9 @@ services:
       context: ./
       dockerfile: ./deploy/Dockerfile
       args:
-        # ORIGINAL_IMAGE: "ubuntu:22.04"
-        ORIGINAL_IMAGE: "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04" # 按照项目需要是否使用CUDA镜像
-        PYTHON_VERSION: "3.10" # 按照项目需要选择Python版本
+        BASE_IMAGE: "ubuntu:26.04"
+        # BASE_IMAGE: "nvidia/cuda:13.3.1-cudnn-devel-ubuntu26.04" # 按照项目需要是否使用CUDA镜像
+        PYTHON_VERSION: "3.12" # 按照项目需要选择Python版本
         # ENABLE_CHINA_MIRROR: "true"  # 是否使用国内镜像。默认为true
     image: "alg_template:1.0"     # ②【修改：项目名】
     restart: unless-stopped
@@ -41,5 +41,5 @@ services:
       resources: *default-resources
     logging: *default-logging
 
-# docker-compose build --progress=plain
-# docker-compose up -d
+# docker compose build --progress=plain
+# docker compose up -d
