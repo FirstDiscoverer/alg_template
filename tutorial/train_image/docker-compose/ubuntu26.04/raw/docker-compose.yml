@@ -11,18 +11,10 @@ x-resources: &default-resources
 
 services:
   build_service:
-    build:
-      context: ../../../
-      dockerfile: cuda-miniforge.Dockerfile
-      args:
-        # 修改镜像名 ①
-        ORIGINAL_IMAGE: "ubuntu:22.04"
-    # 修改镜像名 ②
-    image: "alg:ubuntu22.04-miniforge"
+    image: "ubuntu:26.04"
     restart: unless-stopped
     deploy:
       resources: *default-resources
     logging: *default-logging
     tty: true
 
-# docker-compose build --progress plain --no-cache
