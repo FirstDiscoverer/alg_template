@@ -16,6 +16,9 @@ for file in *; do
 done
 
 # 2. dist-upgrade
+# 先安装CA
+apt-get update -y -o Acquire::https::Verify-Peer=false -o Acquire::https::Verify-Host=false
+apt-get install -y ca-certificates -o Acquire::https::Verify-Peer=false -o Acquire::https::Verify-Host=false
 apt-get clean && apt-get update -y -q
 # 静默升级，防止打断。--force-confdef：让 dpkg 自动使用默认处理方式，而不再反复询问。--force-confold：在发现当前系统的配置文件与新版本冲突时，自动保留你当前的“旧”配置文件。--force-confnew 检测到冲突时，强制使用软件官方的新配置文件覆盖
 DEBIAN_FRONTEND=noninteractive \
@@ -29,10 +32,6 @@ apt-get clean && apt-get update -y -qq && apt-get upgrade -y -qq
 apt_get_install() {
   apt-get install -y --no-install-recommends -qq "$@"
 }
-
-# 防止wget出现证书错误：错误: 无法验证 mirrors.tuna.tsinghua.edu.cn 的由 ‘CN=R10,O=Let's Encrypt,C=US’ 颁发的证书
-apt_get_install ca-certificates
-update-ca-certificates
 
 apt_get_install language-pack-zh-hans
 apt_get_install locales && locale-gen zh_CN.UTF-8 && update-locale LANG=zh_CN.UTF-8 && locale
