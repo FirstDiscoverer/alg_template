@@ -47,7 +47,9 @@ git clone ${GITHUB_MIRROR}/zsh-users/zsh-autosuggestions.git "${ZSH_PLUGIN_AUTOS
 git clone ${GITHUB_MIRROR}/zsh-users/zsh-syntax-highlighting.git "${ZSH_PLUGIN_SYNTAX_HIGHLIGHTING}" || { echo "git clone zsh-syntax-highlighting失败"; exit 1; }
 git clone ${GITHUB_MIRROR}/Powerlevel9k/powerlevel9k.git "${ZSH_THEME_POWERLEVEL9K}" || { echo "git clone powerlevel9k失败"; exit 1; }
 
+# Waring：所有配置必须写在source $ZSH/oh-my-zsh.sh之前，否则不生效
 cp "${OH_MY_ZSH_DIR}/templates/zshrc.zsh-template" "${ZSHRC_PATH}"
+sed -i "1i zstyle ':omz:update' mode disabled" "${ZSHRC_PATH}"
 sed -i '/^export ZSH=/ s/^/# /' "${ZSHRC_PATH}"
 sed -i "/^# export ZSH=/a export ZSH=${OH_MY_ZSH_STR_DIR}" "${ZSHRC_PATH}"
 sed -i '/^plugins=/ s/^/# /' "${ZSHRC_PATH}"

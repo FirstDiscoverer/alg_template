@@ -16,7 +16,7 @@ x-resources: &default-resources
 
 services:
   build_service:
-    image: "nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04"
+    image: "nvidia/cuda:13.3.1-cudnn-devel-ubuntu26.04"
     restart: unless-stopped
     deploy:
       resources: *default-resources
