@@ -58,7 +58,7 @@ conda clean --all --yes --verbose
 if [ "${ENABLE_CHINA_MIRROR}" != "false" ]; then
   echo "切换到国内源..."
   pip config set global.index-url https://mirrors.aliyun.com/pypi/simple
-  pip config set global.extra-index-url "https://mirrors.aliyun.com/pypi/simple https://mirrors.cloud.tencent.com/pypi/simple https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple https://mirrors.bfsu.edu.cn/pypi/web/simple"
+  pip config set global.extra-index-url "https://mirrors.aliyun.com/pypi/simple https://mirrors.cloud.tencent.com/pypi/simple https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple some-package https://mirrors.bfsu.edu.cn/pypi/web/simple"
 fi
 
 # pip config set global.no-cache-dir true
