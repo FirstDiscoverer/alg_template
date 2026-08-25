@@ -2,8 +2,14 @@
 
 # 1. 镜像源
 cp /etc/apt/sources.list.d/ubuntu.sources /etc/apt/sources.list.d/ubuntu.sources.backup
-sed -i 's|http://archive.ubuntu.com/ubuntu/|https://mirrors.bfsu.edu.cn/ubuntu|g' /etc/apt/sources.list.d/ubuntu.sources
-sed -i 's|http://security.ubuntu.com/ubuntu/|https://mirrors.bfsu.edu.cn/ubuntu|g' /etc/apt/sources.list.d/ubuntu.sources
+
+export ENABLE_CHINA_MIRROR=true
+echo "使用国内源: ${ENABLE_CHINA_MIRROR}"
+if [ "${ENABLE_CHINA_MIRROR}" != "false" ]; then
+  echo "切换到国内源..."
+  sed -i 's|http://archive.ubuntu.com/ubuntu/|https://mirrors.bfsu.edu.cn/ubuntu|g' /etc/apt/sources.list.d/ubuntu.sources
+  sed -i 's|http://security.ubuntu.com/ubuntu/|https://mirrors.bfsu.edu.cn/ubuntu|g' /etc/apt/sources.list.d/ubuntu.sources
+fi
 
 cd /etc/apt/sources.list.d || exit
 # 去除CUDA镜像源避免后续apt更新

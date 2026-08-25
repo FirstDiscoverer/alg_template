@@ -32,7 +32,7 @@ conda clean --all --yes
 
 # Conda配置
 if [ "${ENABLE_CHINA_MIRROR}" != "false" ]; then
-  echo "切换到国内源..."
+  echo "conda 切换到国内源..."
   conda config --set show_channel_urls yes
   conda config --append channels conda-forge
   conda config --set custom_channels.conda-forge https://mirrors.bfsu.edu.cn/anaconda/cloud
@@ -56,7 +56,7 @@ conda clean --all --yes --verbose
 
 # pip配置
 if [ "${ENABLE_CHINA_MIRROR}" != "false" ]; then
-  echo "切换到国内源..."
+  echo "pip 切换到国内源..."
   pip config set global.index-url https://mirrors.aliyun.com/pypi/simple
   pip config set global.extra-index-url "https://mirrors.aliyun.com/pypi/simple https://mirrors.cloud.tencent.com/pypi/simple https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple https://mirrors.bfsu.edu.cn/pypi/web/simple"
 fi
@@ -64,3 +64,26 @@ fi
 # pip config set global.no-cache-dir true
 
 pip config list
+pip cache purge
+
+# UV配置
+if [ "${ENABLE_CHINA_MIRROR}" != "false" ]; then
+  echo "UV 切换到国内源..."
+mkdir -p "${HOME}/.config/uv"
+cat << 'EOF' > "${HOME}/.config/uv/uv.toml"
+[[index]]
+name = "bfsu"
+url = "https://mirrors.bfsu.edu.cn/pypi/web/simple"
+default = true
+
+[[index]]
+name = "tsinghua"
+url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
+
+[[index]]
+name = "aliyun"
+url = "https://mirrors.aliyun.com/pypi/simple"
+EOF
+fi
+
+uv cache clean

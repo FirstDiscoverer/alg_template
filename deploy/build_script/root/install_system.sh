@@ -4,7 +4,6 @@
 cp /etc/apt/sources.list.d/ubuntu.sources /etc/apt/sources.list.d/ubuntu.sources.backup
 
 echo "使用国内源: ${ENABLE_CHINA_MIRROR}"
-
 if [ "${ENABLE_CHINA_MIRROR}" != "false" ]; then
   echo "切换到国内源..."
   sed -i 's|http://archive.ubuntu.com/ubuntu/|https://mirrors.bfsu.edu.cn/ubuntu|g' /etc/apt/sources.list.d/ubuntu.sources

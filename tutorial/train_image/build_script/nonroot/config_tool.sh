@@ -26,8 +26,12 @@ which pip pip3 python python3
 pip_install() {
   pip3 install --retries=3 --timeout=30 --no-cache-dir "$@"
 }
+pip_install uv
 
-pip_install nvitop glances gpustat
+uv_install() {
+  uv pip install --no-cache "$@"
+}
+uv_install --system nvitop glances gpustat
 
 # 2. shell工具
 # 2.1 ZSH
