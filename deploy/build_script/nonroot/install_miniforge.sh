@@ -85,5 +85,3 @@ name = "aliyun"
 url = "https://mirrors.aliyun.com/pypi/simple"
 EOF
 fi
-
-uv cache clean
