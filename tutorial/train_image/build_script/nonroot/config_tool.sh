@@ -73,6 +73,7 @@ echo >> "${ZSHRC_PATH}"
 conda init zsh
 echo >> "${ZSHRC_PATH}"
 
+export MY_ZSH_CONFIG=/config_my/zsh_config
 cat ${MY_ZSH_CONFIG}/profile.sh >> "${ZSHRC_PATH}"
 
 
@@ -82,6 +83,7 @@ declare -A cmds=(
   ["fastfetch"]="fastfetch --version || { echo '检查失败'; exit 1; }"
   ["screen"]="screen --version || { echo '检查失败'; exit 1; }"
   ["conda"]="conda --version || { echo '检查失败'; exit 1; }"
+  ["uv"]="uv --version || { echo '检查失败'; exit 1; }"
   ["nvitop"]="nvitop --version || { echo '检查失败'; exit 1; }"
   ["glances"]="glances --version || { echo '检查失败'; exit 1; }"
   ["gpustat"]="gpustat --version || { echo '检查失败'; exit 1; }"
@@ -91,7 +93,7 @@ declare -A cmds=(
   ["oh-my-zsh-plug-syntax-highlighting"]="git -C ${ZSH_PLUGIN_SYNTAX_HIGHLIGHTING} log -1 --format='%cd' --date=format:'%Y-%m-%d %H:%M:%S' || { echo '检查失败'; exit 1; }"
   ["oh-my-zsh-theme-powerlevel9k"]="git -C ${ZSH_THEME_POWERLEVEL9K} log -1 --format='%cd' --date=format:'%Y-%m-%d %H:%M:%S' || { echo '检查失败'; exit 1; }"
 )
-ordered_keys=("fastfetch" "screen" "conda" "nvitop" "glances" "gpustat" "zsh" "oh-my-zsh" "oh-my-zsh-plug-autosuggestions" "oh-my-zsh-plug-syntax-highlighting" "oh-my-zsh-theme-powerlevel9k")
+ordered_keys=("fastfetch" "screen" "conda" "uv" "nvitop" "glances" "gpustat" "zsh" "oh-my-zsh" "oh-my-zsh-plug-autosuggestions" "oh-my-zsh-plug-syntax-highlighting" "oh-my-zsh-theme-powerlevel9k")
 sorted_cmds_keys=$(printf "%s\n" "${!cmds[@]}" | sort | tr '\n' ' ')
 sorted_ordered_keys=$(printf "%s\n" "${ordered_keys[@]}" | sort | tr '\n' ' ')
 if [ "$sorted_cmds_keys" = "$sorted_ordered_keys" ]; then
