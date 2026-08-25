@@ -49,7 +49,7 @@ git clone ${GITHUB_MIRROR}/Powerlevel9k/powerlevel9k.git "${ZSH_THEME_POWERLEVEL
 
 # Waring：所有配置必须写在source $ZSH/oh-my-zsh.sh之前，否则不生效
 cp "${OH_MY_ZSH_DIR}/templates/zshrc.zsh-template" "${ZSHRC_PATH}"
-sed -i "1i zstyle ':omz:update' mode disabled" "${ZSHRC_PATH}"
+sed -i "/^# zstyle ':omz:update' mode reminder/a zstyle ':omz:update' mode disabled" "${ZSHRC_PATH}"
 sed -i '/^export ZSH=/ s/^/# /' "${ZSHRC_PATH}"
 sed -i "/^# export ZSH=/a export ZSH=${OH_MY_ZSH_STR_DIR}" "${ZSHRC_PATH}"
 sed -i '/^plugins=/ s/^/# /' "${ZSHRC_PATH}"
@@ -57,11 +57,18 @@ sed -i '/^# plugins=/a plugins=(z git zsh-autosuggestions zsh-syntax-highlightin
 sed -i '/^ZSH_THEME=/ s/^/# /' "${ZSHRC_PATH}"
 sed -i '/^# ZSH_THEME=/a ZSH_THEME="powerlevel9k\/powerlevel9k"' "${ZSHRC_PATH}"
 # 这个主题配置不能写到.zshrc的最后，否则会导致连接SSH的时候一些符号不显示，必须source .zshrc之后才显示
-export MY_ZSH_CONFIG=/config_my/zsh_config
-sed -i "/^ZSH_THEME=/r ${MY_ZSH_CONFIG}/omz_theme" "${ZSHRC_PATH}"
+read -r -d '' OMZ_THEME_CONTENT << 'EOF'
+POWERLEVEL9K_MODE="nerdfont-complete"
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history anaconda time)
+POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
+EOF
+sed -i "/^ZSH_THEME=/r "<(echo "${OMZ_THEME_CONTENT}") "${ZSHRC_PATH}"
+
 echo >> "${ZSHRC_PATH}"
 conda init zsh
 echo >> "${ZSHRC_PATH}"
+
 cat ${MY_ZSH_CONFIG}/profile.sh >> "${ZSHRC_PATH}"
 
 
