@@ -58,8 +58,8 @@ x-logging: &default-logging
     max-file: "10"
 
 services:
-  【名字拼音缩写，如lx】_train:
-    container_name: "【名字拼音缩写，如lx】_train"
+  【名字拼音，如zhangsan】_train:
+    container_name: "【名字拼音，如zhangsan】_train"
     # hostname: "container-xxx"
     image: alg:cuda11.8.0-cudnn8-devel-ubuntu22.04-miniforge-ssh-zsh   # 【自定义镜像版本】
     restart: unless-stopped
@@ -149,7 +149,7 @@ conda clean --all -y --verbose
 
 ```yaml
 services:
-  【名字拼音缩写，如lx】_train:
+  xxx_train:
     volumes:
       - ${CODE_DIR}:/home/appuser/Workspace
       # 下面的文件，① 先启动容器，将文件复制出来(docker cp -a 容器名:容器内路径 ./)，② 然后再添加volume映射
@@ -164,7 +164,7 @@ services:
 
 ```yaml
 services:
-  【名字拼音缩写，如lx】_train:
+  xxx_train:
     secrets: # 启动容器时自动修改密码
       - root_password
       - user_password
@@ -182,11 +182,11 @@ secrets:
 
 ```yaml
 services:
-  【名字拼音缩写，如lx】_train:
+  xxx_train:
     extra_hosts:
       - "host.docker.internal:host-gateway" # 当前主机
-      - "gpu1.wedoctor.server:192.168.3.239" # 其他主机
-      - "gpu2.wedoctor.server:192.168.3.28" # 其他主机
+      - "gpu1.xxx.server:192.168.0.1" # 其他主机
+      - "gpu2.xxx.server:192.168.0.2" # 其他主机
 ```
 
 ### 2.5.4 容器中安装Oracle的Python客户端依赖
