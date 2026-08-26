@@ -152,7 +152,7 @@ services:
   【名字拼音缩写，如lx】_train:
     volumes:
       - ${CODE_DIR}:/home/appuser/Workspace
-      # 下面的文件，① 先启动容器，将文件复制出来(docker cp 容器名:容器内路径 ./)，② 然后再添加volume映射
+      # 下面的文件，① 先启动容器，将文件复制出来(docker cp -a 容器名:容器内路径 ./)，② 然后再添加volume映射
       - ${VOLUME_DIR}/miniforge:/home/appuser/Software/miniforge
       - ${VOLUME_DIR}/supervisor:/etc/supervisor
       - ${VOLUME_DIR}/.cache:/home/appuser/.cache
