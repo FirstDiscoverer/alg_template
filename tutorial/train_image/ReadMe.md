@@ -123,7 +123,11 @@ docker exec -it -u appuser 容器名 zsh
 ### 2.4.1 终端字体显示不全or乱码
 
 - 原因：默认的字体符号不全
-- 解决：推荐终端使用 [HackNerdFontMono-Regular.ttf](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/Hack/Regular) 字体
+- 解决
+    - 下载字体
+        - windows: [MesloLGSNerdFontMono-Regular.ttf](https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Meslo.zip)
+        - Mac：`brew install --cask font-meslo-lg-nerd-font`
+    - 终端使用字体：MesloLGS Nerd Font Mono
 
 ### 2.4.2 TensorFlow注意事项
 
