@@ -45,11 +45,11 @@ ZSH_PLUGIN_AUTOSUGGESTIONS="${ZSH_CUSTOM_PLUGIN_DIR}/zsh-autosuggestions"
 ZSH_PLUGIN_SYNTAX_HIGHLIGHTING="${ZSH_CUSTOM_PLUGIN_DIR}/zsh-syntax-highlighting"
 ZSH_THEME_POWERLEVEL10K="${ZSH_CUSTOM_DIR}/themes/powerlevel10k"
 
-git clone ${GITHUB_MIRROR}/ohmyzsh/ohmyzsh.git ${OH_MY_ZSH_DIR} || { echo "git clone ohmyzsh 失败"; exit 1; }
-# git clone https://mirrors.tuna.tsinghua.edu.cn/git/ohmyzsh.git "${OH_MY_ZSH_DIR}" || { echo "git clone失败"; exit 1; }
-git clone ${GITHUB_MIRROR}/zsh-users/zsh-autosuggestions.git "${ZSH_PLUGIN_AUTOSUGGESTIONS}" || { echo "git clone zsh-autosuggestions失败"; exit 1; }
-git clone ${GITHUB_MIRROR}/zsh-users/zsh-syntax-highlighting.git "${ZSH_PLUGIN_SYNTAX_HIGHLIGHTING}" || { echo "git clone zsh-syntax-highlighting失败"; exit 1; }
-git clone ${GITHUB_MIRROR}/romkatv/powerlevel10k.git "${ZSH_THEME_POWERLEVEL10K}" || { echo "git clone powerlevel10k失败"; exit 1; }
+git clone --depth 1 ${GITHUB_MIRROR}/ohmyzsh/ohmyzsh.git ${OH_MY_ZSH_DIR} || { echo "git clone ohmyzsh 失败"; exit 1; }
+# git clone --depth 1 https://mirrors.tuna.tsinghua.edu.cn/git/ohmyzsh.git "${OH_MY_ZSH_DIR}" || { echo "git clone失败"; exit 1; }
+git clone --depth 1 ${GITHUB_MIRROR}/zsh-users/zsh-autosuggestions.git "${ZSH_PLUGIN_AUTOSUGGESTIONS}" || { echo "git clone zsh-autosuggestions失败"; exit 1; }
+git clone --depth 1 ${GITHUB_MIRROR}/zsh-users/zsh-syntax-highlighting.git "${ZSH_PLUGIN_SYNTAX_HIGHLIGHTING}" || { echo "git clone zsh-syntax-highlighting失败"; exit 1; }
+git clone --depth 1 ${GITHUB_MIRROR}/romkatv/powerlevel10k.git "${ZSH_THEME_POWERLEVEL10K}" || { echo "git clone powerlevel10k失败"; exit 1; }
 
 # Waring：所有配置必须写在source $ZSH/oh-my-zsh.sh之前，否则不生效
 cp "${OH_MY_ZSH_DIR}/templates/zshrc.zsh-template" "${ZSHRC_PATH}"
@@ -59,10 +59,10 @@ sed -i "/^# export ZSH=/a export ZSH=${OH_MY_ZSH_STR_DIR}" "${ZSHRC_PATH}"
 sed -i '/^plugins=/ s/^/# /' "${ZSHRC_PATH}"
 sed -i '/^# plugins=/a plugins=(z git zsh-autosuggestions zsh-syntax-highlighting)' "${ZSHRC_PATH}"
 sed -i '/^ZSH_THEME=/ s/^/# /' "${ZSHRC_PATH}"
-sed -i '/^# ZSH_THEME=/a ZSH_THEME="romkatv\/powerlevel10k"' "${ZSHRC_PATH}"
+sed -i '/^# ZSH_THEME=/a ZSH_THEME="powerlevel10k\/powerlevel10k"' "${ZSHRC_PATH}"
 # 这个主题配置不能写到.zshrc的最后，否则会导致连接SSH的时候一些符号不显示，必须source .zshrc之后才显示
 read -r -d '' OMZ_THEME_CONTENT << 'EOF'
-POWERLEVEL9K_MODE="nerdfont-complete"
+POWERLEVEL9K_MODE="nerdfont-v3"
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history anaconda time)
 POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
@@ -93,7 +93,7 @@ declare -A cmds=(
   ["oh-my-zsh-plug-syntax-highlighting"]="git -C ${ZSH_PLUGIN_SYNTAX_HIGHLIGHTING} log -1 --format='%cd' --date=format:'%Y-%m-%d %H:%M:%S' || { echo '检查失败'; exit 1; }"
   ["oh-my-zsh-theme-powerlevel10k"]="git -C ${ZSH_THEME_POWERLEVEL10K} log -1 --format='%cd' --date=format:'%Y-%m-%d %H:%M:%S' || { echo '检查失败'; exit 1; }"
 )
-ordered_keys=("fastfetch" "screen" "conda" "uv" "nvitop" "glances" "gpustat" "zsh" "oh-my-zsh" "oh-my-zsh-plug-autosuggestions" "oh-my-zsh-plug-syntax-highlighting" "oh-my-zsh-theme-powerlevel9k")
+ordered_keys=("fastfetch" "screen" "conda" "uv" "nvitop" "glances" "gpustat" "zsh" "oh-my-zsh" "oh-my-zsh-plug-autosuggestions" "oh-my-zsh-plug-syntax-highlighting" "oh-my-zsh-theme-powerlevel10k")
 sorted_cmds_keys=$(printf "%s\n" "${!cmds[@]}" | sort | tr '\n' ' ')
 sorted_ordered_keys=$(printf "%s\n" "${ordered_keys[@]}" | sort | tr '\n' ' ')
 if [ "$sorted_cmds_keys" = "$sorted_ordered_keys" ]; then
