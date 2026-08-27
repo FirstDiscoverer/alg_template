@@ -51,8 +51,23 @@ git clone --depth 1 ${GITHUB_MIRROR}/zsh-users/zsh-autosuggestions.git "${ZSH_PL
 git clone --depth 1 ${GITHUB_MIRROR}/zsh-users/zsh-syntax-highlighting.git "${ZSH_PLUGIN_SYNTAX_HIGHLIGHTING}" || { echo "git clone zsh-syntax-highlighting失败"; exit 1; }
 git clone --depth 1 ${GITHUB_MIRROR}/romkatv/powerlevel10k.git "${ZSH_THEME_POWERLEVEL10K}" || { echo "git clone powerlevel10k失败"; exit 1; }
 
+chmod +x "${ZSH_THEME_POWERLEVEL10K}/gitstatus/install"
+zsh "${ZSH_THEME_POWERLEVEL10K}/gitstatus/install"
+ls -al ${HOME}/.cache/gitstatus/
+
 # Waring：所有配置必须写在source $ZSH/oh-my-zsh.sh之前，否则不生效
-cp "${OH_MY_ZSH_DIR}/templates/zshrc.zsh-template" "${ZSHRC_PATH}"
+read -r -d '' INSTANT_PROMPT_CONTENT << 'EOF'
+fastfetch
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+EOF
+echo "${INSTANT_PROMPT_CONTENT}" | cat - "${OH_MY_ZSH_DIR}/templates/zshrc.zsh-template" > "${ZSHRC_PATH}"
 sed -i "/^# zstyle ':omz:update' mode reminder/a zstyle ':omz:update' mode disabled" "${ZSHRC_PATH}"
 sed -i '/^export ZSH=/ s/^/# /' "${ZSHRC_PATH}"
 sed -i "/^# export ZSH=/a export ZSH=${OH_MY_ZSH_STR_DIR}" "${ZSHRC_PATH}"
@@ -92,8 +107,9 @@ declare -A cmds=(
   ["oh-my-zsh-plug-autosuggestions"]="git -C ${ZSH_PLUGIN_AUTOSUGGESTIONS} log -1 --format='%cd' --date=format:'%Y-%m-%d %H:%M:%S' || { echo '检查失败'; exit 1; }"
   ["oh-my-zsh-plug-syntax-highlighting"]="git -C ${ZSH_PLUGIN_SYNTAX_HIGHLIGHTING} log -1 --format='%cd' --date=format:'%Y-%m-%d %H:%M:%S' || { echo '检查失败'; exit 1; }"
   ["oh-my-zsh-theme-powerlevel10k"]="git -C ${ZSH_THEME_POWERLEVEL10K} log -1 --format='%cd' --date=format:'%Y-%m-%d %H:%M:%S' || { echo '检查失败'; exit 1; }"
+  ["oh-my-zsh-theme-powerlevel10k-gitstatusd"]="${HOME}/.cache/gitstatus/gitstatusd-linux-x86_64 -V || { echo '检查失败'; exit 1; }"
 )
-ordered_keys=("fastfetch" "screen" "conda" "uv" "nvitop" "glances" "gpustat" "zsh" "oh-my-zsh" "oh-my-zsh-plug-autosuggestions" "oh-my-zsh-plug-syntax-highlighting" "oh-my-zsh-theme-powerlevel10k")
+ordered_keys=("fastfetch" "screen" "conda" "uv" "nvitop" "glances" "gpustat" "zsh" "oh-my-zsh" "oh-my-zsh-plug-autosuggestions" "oh-my-zsh-plug-syntax-highlighting" "oh-my-zsh-theme-powerlevel10k" "oh-my-zsh-theme-powerlevel10k-gitstatusd")
 sorted_cmds_keys=$(printf "%s\n" "${!cmds[@]}" | sort | tr '\n' ' ')
 sorted_ordered_keys=$(printf "%s\n" "${ordered_keys[@]}" | sort | tr '\n' ' ')
 if [ "$sorted_cmds_keys" = "$sorted_ordered_keys" ]; then

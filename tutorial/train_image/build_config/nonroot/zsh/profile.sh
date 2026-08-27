@@ -19,5 +19,3 @@ alias uv_clean='uv cache clean'
 
 alias log_supervisor='cd /var/log/supervisor'
 alias log_screen='cd /var/log/screen'
-
-fastfetch
