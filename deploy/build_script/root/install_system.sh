@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # 1. 镜像源
-cp /etc/apt/sources.list.d/ubuntu.sources /etc/apt/sources.list.d/ubuntu.sources.backup
+BACKUP_DIR="/etc/apt/sources.list.d.bak"
+mkdir -p "${BACKUP_DIR}"
+cp /etc/apt/sources.list.d/ubuntu.sources "${BACKUP_DIR}/ubuntu.sources"
 
 echo "使用国内源: ${ENABLE_CHINA_MIRROR}"
 if [ "${ENABLE_CHINA_MIRROR}" != "false" ]; then
@@ -13,10 +15,10 @@ fi
 cd /etc/apt/sources.list.d || exit
 # 去除CUDA镜像源避免后续apt更新
 for file in *; do
-  # 判断是否是文件，并且文件名符合条件：cuda-开头、不是.backup结尾
-  if [[ -f "$file" && "$file" == cuda-* && "$file" != *.backup ]]; then
-    mv "$file" "$file.backup"
-    echo "重命名: $file -> $file.backup"
+  # 判断是否是文件，并且文件名以 cuda- 开头
+  if [[ -f "${file}" && "${file}" == cuda-* ]]; then
+    mv "${file}" "${BACKUP_DIR}/${file}"
+    echo "移动备份: ${file} -> ${BACKUP_DIR}/${file}"
   fi
 done
 
