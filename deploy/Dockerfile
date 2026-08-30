@@ -34,7 +34,7 @@ ENV PATH="/home/${USER_NAME}/Software/miniforge/bin:${PATH}"
 # 4. 项目运行环境
 # [Activate conda environment in docker](https://stackoverflow.com/questions/55123637/activate-conda-environment-in-docker)、[Conda Docker tutoria](https://kevalnagda.github.io/conda-docker-tutorial)
 # ① 自定义项目的Python版本
-ARG PYTHON_VERSION="3.12"
+ARG PYTHON_VERSION="3.14"
 ARG APP_DEPLOY_ENV="my_app"
 RUN conda create -y -n ${APP_DEPLOY_ENV} python=${PYTHON_VERSION} && conda clean --all --yes --verbose \
     && echo "conda activate ${APP_DEPLOY_ENV}" >> "/home/${USER_NAME}/.bashrc"
