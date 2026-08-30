@@ -13,7 +13,6 @@ for var in "${variables[@]}"; do
 done
 echo "================所需变量 end  ================"
 
-export ENABLE_CHINA_MIRROR="true"
 echo "使用国内源: ${ENABLE_CHINA_MIRROR}"
 # MiniForge安装
 MINIFORGE_DIR="${HOME}/Software/miniforge"
