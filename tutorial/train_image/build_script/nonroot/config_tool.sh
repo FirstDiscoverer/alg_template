@@ -78,9 +78,11 @@ sed -i '/^# ZSH_THEME=/a ZSH_THEME="powerlevel10k\/powerlevel10k"' "${ZSHRC_PATH
 # 这个主题配置不能写到.zshrc的最后，否则会导致连接SSH的时候一些符号不显示，必须source .zshrc之后才显示
 read -r -d '' OMZ_THEME_CONTENT << 'EOF'
 POWERLEVEL9K_MODE="nerdfont-v3"
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs history anaconda time)
 POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status command_execution_time root_indicator background_jobs history anaconda time)
+POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=3
+POWERLEVEL9K_COMMAND_EXECUTION_TIME_PRECISION=1
 EOF
 sed -i "/^ZSH_THEME=/r "<(echo "${OMZ_THEME_CONTENT}") "${ZSHRC_PATH}"
 
