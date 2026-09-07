@@ -38,4 +38,4 @@ secrets:
   user_password:
     file: ../../../build_config/root/secret/user_password.txt
 
-# docker compose build --progress plain --no-cache
+# docker compose --progress plain build --no-cache

@@ -30,4 +30,4 @@ services:
     logging: *default-logging
     tty: true
 
-# docker compose build --progress plain --no-cache
+# docker compose --progress plain build --no-cache
