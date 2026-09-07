@@ -19,7 +19,7 @@ which pip pip3 python python3
 
 # ① Tensorflow使用GPU
 # conda search tensorflow-gpu --channel conda-forge
-# conda install -n ${APP_DEPLOY_ENV} -y tensorflow-gpu==1.xxx -c conda-forge # 若Tensorflow安装找不到，确认该版本的Tensorflow是否支持当前conda环境的Python版本
+# conda install -n ${APP_DEPLOY_ENV} -y tensorflow-gpu==1.xxx # 若Tensorflow安装找不到，确认该版本的Tensorflow是否支持当前conda环境的Python版本
 
 # ② Pytorch使用GPU
 # 参照Pytorch官网来安装GPU版本的Pytorch，会自动装好依赖的CUDA https://pytorch.org/get-started/previous-versions/
