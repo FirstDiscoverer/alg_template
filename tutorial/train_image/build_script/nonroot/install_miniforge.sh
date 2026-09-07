@@ -28,7 +28,7 @@ rm -rf ${MINIFORGE_SAVE_PATH}
 
 PATH="${MINIFORGE_DIR}/bin:$PATH"
 conda init bash
-conda clean --all --yes
+mamba clean --all --yes --verbose
 
 # Conda配置
 if [ "${ENABLE_CHINA_MIRROR}" != "false" ]; then
@@ -49,10 +49,10 @@ conda config --show-sources
 conda config --validate
 conda info
 
-conda update -n base -c conda-forge conda --yes --verbose
+mamba update -n base -c conda-forge conda --yes --verbose
 conda info
 
-conda clean --all --yes --verbose
+mamba clean --all --yes --verbose
 
 # pip配置
 if [ "${ENABLE_CHINA_MIRROR}" != "false" ]; then

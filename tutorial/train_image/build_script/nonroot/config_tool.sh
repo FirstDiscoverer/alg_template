@@ -20,7 +20,7 @@ echo "================所需变量 end  ================"
 # 1. Python 工具
 source "${MINIFORGE_DIR}/etc/profile.d/conda.sh"
 which conda
-conda create -n tool python=$(conda search python -c conda-forge | awk '{print $2}' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1 | cut -d '.' -f 1,2) -y
+mamba create -n tool python=$(mamba search python -c conda-forge | awk '{print $2}' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1 | cut -d '.' -f 1,2) -y
 conda activate tool
 which pip pip3 python python3
 
@@ -128,6 +128,6 @@ for name in "${ordered_keys[@]}"; do
     echo -e "【${name}】\n${version}\n"
 done
 
-conda clean --all --yes --verbose
+mamba clean --all --yes --verbose
 pip cache purge
 uv cache clean
