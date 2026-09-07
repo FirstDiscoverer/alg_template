@@ -20,7 +20,8 @@ echo "================所需变量 end  ================"
 # 1. Python 工具
 source "${MINIFORGE_DIR}/etc/profile.d/conda.sh"
 which conda
-conda activate base
+conda create -n tool python=$(conda search python -c conda-forge | awk '{print $2}' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1 | cut -d '.' -f 1,2) -y
+conda activate tool
 which pip pip3 python python3
 
 pip_install() {
@@ -31,7 +32,7 @@ pip_install uv
 uv_install() {
   uv pip install --no-cache "$@"
 }
-uv_install --system nvitop glances gpustat
+uv_install nvitop glances gpustat
 
 # 2. shell工具
 # 2.1 ZSH
@@ -126,3 +127,7 @@ for name in "${ordered_keys[@]}"; do
     version=$(eval "${cmds[$name]}")
     echo -e "【${name}】\n${version}\n"
 done
+
+conda clean --all --yes --verbose
+pip cache purge
+uv cache clean

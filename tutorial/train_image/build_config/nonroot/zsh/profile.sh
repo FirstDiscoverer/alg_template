@@ -1,12 +1,14 @@
-CONDA_BASE_BIN_DIR=$(dirname "${CONDA_EXE}")  # conda init后有这个变量
+# conda init后有这个变量
+CONDA_ROOT_DIR=$(dirname $(dirname "${CONDA_EXE}"))
+CONDA_TOOL_BIN_DIR="${CONDA_ROOT_DIR}/envs/tool/bin"
 nvitop() {
-    "${CONDA_BASE_BIN_DIR}/nvitop" "$@"
+    "${CONDA_TOOL_BIN_DIR}/nvitop" "$@"
 }
 glances() {
-    "${CONDA_BASE_BIN_DIR}/glances" "$@"
+    "${CONDA_TOOL_BIN_DIR}/glances" "$@"
 }
 gpu_info() {
-    watch -n1 --color "${CONDA_BASE_BIN_DIR}/gpustat -cpu --color"
+    watch -n1 --color "${CONDA_TOOL_BIN_DIR}/gpustat -cpu --color"
 }
 
 alias grep="grep -i --color=auto"
