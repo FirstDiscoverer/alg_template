@@ -41,5 +41,5 @@ services:
       resources: *default-resources
     logging: *default-logging
 
-# docker compose build --progress=plain
+# docker compose --progress=plain build
 # docker compose up -d
