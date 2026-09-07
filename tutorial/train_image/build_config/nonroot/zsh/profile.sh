@@ -16,6 +16,7 @@ alias l="ls -lF"
 alias ll="ls -alF" 
 
 alias conda_clean='conda clean --all --yes --verbose'
+alias mamba_clean='mamba clean --all --yes --verbose'
 alias pip_clean='pip cache purge'
 alias uv_clean='uv cache clean'
 
