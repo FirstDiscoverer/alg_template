@@ -18,7 +18,7 @@ echo "使用国内源: ${ENABLE_CHINA_MIRROR}"
 MINIFORGE_DIR="${HOME}/Software/miniforge"
 MINIFORGE_URL="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh"
 if [ "${ENABLE_CHINA_MIRROR}" != "false" ]; then
-    MINIFORGE_URL='https://mirrors.tuna.tsinghua.edu.cn/github-release/conda-forge/miniforge/LatestRelease/Miniforge3-Linux-x86_64.sh'
+    MINIFORGE_URL='https://mirrors.bfsu.edu.cn/github-release/conda-forge/miniforge/LatestRelease/Miniforge3-Linux-x86_64.sh'
 fi
 MINIFORGE_SAVE_PATH="/tmp/miniforge.sh"
 
@@ -33,23 +33,26 @@ mamba clean --all --yes --verbose
 # Conda配置
 if [ "${ENABLE_CHINA_MIRROR}" != "false" ]; then
   echo "conda 切换到国内源..."
-  conda config --set show_channel_urls yes
-  conda config --append channels conda-forge
-  conda config --set custom_channels.conda-forge https://mirrors.bfsu.edu.cn/anaconda/cloud
-  conda config --set custom_channels.msys2 https://mirrors.bfsu.edu.cn/anaconda/cloud
-  conda config --set custom_channels.bioconda https://mirrors.bfsu.edu.cn/anaconda/cloud
-  conda config --set custom_channels.menpo https://mirrors.bfsu.edu.cn/anaconda/cloud
-  conda config --set custom_channels.pytorch https://mirrors.bfsu.edu.cn/anaconda/cloud
-  conda config --set custom_channels.simpleitk https://mirrors.bfsu.edu.cn/anaconda/cloud
-  # [Anaconda Extra 软件仓库镜像使用帮助](https://help.mirrors.cernet.edu.cn/anaconda-extra/)
-  conda config --set custom_channels.nvidia https://mirrors.cernet.edu.cn/anaconda-extra/cloud
+  rm -rf "${HOME}/.condarc"
+  cat << 'EOF' > "${HOME}/.condarc"
+show_channel_urls: true
+channels:
+  - conda-forge
+custom_channels:
+  pytorch: https://mirrors.bfsu.edu.cn/anaconda/cloud/
+  nvidia: https://mirrors.cernet.edu.cn/anaconda-extra/cloud/
+mirrored_channels:
+  conda-forge:
+    - https://mirrors.bfsu.edu.cn/anaconda/cloud/conda-forge
+EOF
 fi
 
+mamba clean --all --yes --verbose
 conda config --show-sources
 conda config --validate
 conda info
 
-mamba update -n base -c conda-forge conda --yes --verbose
+mamba update -n base conda --yes --verbose
 conda info
 
 mamba clean --all --yes --verbose
