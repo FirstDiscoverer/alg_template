@@ -38,6 +38,11 @@ if [ "${ENABLE_CHINA_MIRROR}" != "false" ]; then
 show_channel_urls: true
 channels:
   - conda-forge
+# mamba create -c defaults，慎重使用defaults，有版权风险
+default_channels:
+  - https://mirrors.bfsu.edu.cn/anaconda/pkgs/main
+  - https://mirrors.bfsu.edu.cn/anaconda/pkgs/r
+  - https://mirrors.bfsu.edu.cn/anaconda/pkgs/msys2
 custom_channels:
   pytorch: https://mirrors.bfsu.edu.cn/anaconda/cloud/
   nvidia: https://mirrors.cernet.edu.cn/anaconda-extra/cloud/
