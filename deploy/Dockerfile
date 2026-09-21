@@ -36,11 +36,8 @@ ENV PATH="/home/${USER_NAME}/Software/miniforge/bin:${PATH}"
 # ① 自定义项目的Python版本
 ARG PYTHON_VERSION="3.14"
 ARG APP_DEPLOY_ENV="my_app"
-RUN conda create -y -n ${APP_DEPLOY_ENV} python=${PYTHON_VERSION} && conda clean --all --yes --verbose \
+RUN mamba create -y -n ${APP_DEPLOY_ENV} python=${PYTHON_VERSION} && mamba clean --all --yes --verbose \
     && echo "conda activate ${APP_DEPLOY_ENV}" >> "/home/${USER_NAME}/.bashrc"
-
-# SHELL[]的作用时是在后面的RUN执行时先激活conda环境；--no-capture-output是为了不捕获后面shell的日志输出
-SHELL ["conda", "run", "--no-capture-output", "-n", "my_app", "/bin/bash", "-c"]
 
 # 健康检测
 # ② 保证web服务有/ok接口
@@ -68,4 +65,4 @@ COPY --chown="${USER_NAME}:${USER_NAME}" . .
 # ④ 项目的启动初始化
 RUN chmod +x deploy/start.sh
 
-ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "my_app", "deploy/start.sh"]
+ENTRYPOINT ["deploy/start.sh"]
