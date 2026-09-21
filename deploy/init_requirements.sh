@@ -9,10 +9,8 @@ TIMEOUT=30
 
 echo "是否使用UV: ${ENABLE_UV}"
 if [ "${ENABLE_UV}" != "false" ]; then
-  pip install uv
-
   export UV_HTTP_RETRIES=${RETRIES} UV_HTTP_TIMEOUT=${TIMEOUT}
-  uv pip install -r ${REQ_PATH}
+  uv pip install --system -r ${REQ_PATH}
 
   uv cache clean
 else
