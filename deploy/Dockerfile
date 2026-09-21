@@ -38,6 +38,7 @@ ARG PYTHON_VERSION="3.14"
 ARG APP_DEPLOY_ENV="my_app"
 RUN mamba create -y -n ${APP_DEPLOY_ENV} python=${PYTHON_VERSION} && mamba clean --all --yes --verbose \
     && echo "conda activate ${APP_DEPLOY_ENV}" >> "/home/${USER_NAME}/.bashrc"
+ENV PATH="/home/${USER_NAME}/Software/miniforge/envs/${APP_DEPLOY_ENV}/bin:${PATH}"
 
 # 健康检测
 # ② 保证web服务有/ok接口
