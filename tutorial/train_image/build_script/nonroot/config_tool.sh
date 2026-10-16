@@ -1,9 +1,9 @@
 #!/bin/bash
 
-export MINIFORGE_DIR=${HOME}/Software/miniforge
-export GITHUB_MIRROR='https://github.com'
-#export GITHUB_MIRROR='https://githubfast.com'
-# export GITHUB_DOWN_MIRROR='https://www.ghproxy.cc/https://github.com'
+MINIFORGE_DIR=${HOME}/Software/miniforge
+GITHUB_MIRROR='https://github.com'
+#GITHUB_MIRROR='https://githubfast.com'
+# GITHUB_DOWN_MIRROR='https://www.ghproxy.cc/https://github.com'
 variables=("HOME" "MINIFORGE_DIR" "GITHUB_MIRROR")
 echo "================所需变量 start================"
 echo "user=$(whoami), pwd=$(pwd)"
@@ -19,20 +19,17 @@ echo "================所需变量 end  ================"
 
 # 1. Python 工具
 source "${MINIFORGE_DIR}/etc/profile.d/conda.sh"
+MY_PROFILE=/config_my/zsh_config/profile.sh
+shopt -s expand_aliases
+source ${MY_PROFILE}
 which conda
-mamba create -n tool python=$(mamba search python | awk '{print $2}' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1 | cut -d '.' -f 1,2) -y
-conda activate tool
-which pip pip3 python python3
-
-pip_install() {
-  pip3 install --retries=3 --timeout=30 --no-cache-dir "$@"
-}
-pip_install uv
-
-uv_install() {
-  uv pip install --no-cache "$@"
-}
-uv_install nvitop glances gpustat
+mamba create -n base-pipx python=$(mamba search python | awk '{print $2}' | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1 | cut -d '.' -f 1,2) -y
+mamba run -n base-pipx python -m pip install --retries=3 --timeout=30 --no-cache-dir pipx
+mkdir -p ${HOME}/.local/bin
+ln -sf "$(mamba run -n base-pipx python -c 'import sys; print(sys.prefix)')/bin/pipx" "${HOME}/.local/bin/pipx"
+pipx ensurepath
+pipx install uv --backend pip
+pipx install nvitop glances gpustat
 
 # 2. shell工具
 # 2.1 ZSH
@@ -91,8 +88,7 @@ echo >> "${ZSHRC_PATH}"
 conda init zsh
 echo >> "${ZSHRC_PATH}"
 
-export MY_ZSH_CONFIG=/config_my/zsh_config
-cat ${MY_ZSH_CONFIG}/profile.sh >> "${ZSHRC_PATH}"
+cat ${MY_PROFILE} >> "${ZSHRC_PATH}"
 
 
 # Final：
@@ -102,6 +98,7 @@ declare -A cmds=(
   ["screen"]="screen --version || { echo '检查失败'; exit 1; }"
   ["conda"]="conda --version || { echo '检查失败'; exit 1; }"
   ["uv"]="uv --version || { echo '检查失败'; exit 1; }"
+  ["pipx"]="pipx --version || { echo '检查失败'; exit 1; }"
   ["nvitop"]="nvitop --version || { echo '检查失败'; exit 1; }"
   ["glances"]="glances --version || { echo '检查失败'; exit 1; }"
   ["gpustat"]="gpustat --version || { echo '检查失败'; exit 1; }"
@@ -112,7 +109,7 @@ declare -A cmds=(
   ["oh-my-zsh-theme-powerlevel10k"]="git -C ${ZSH_THEME_POWERLEVEL10K} log -1 --format='%cd' --date=format:'%Y-%m-%d %H:%M:%S' || { echo '检查失败'; exit 1; }"
   ["oh-my-zsh-theme-powerlevel10k-gitstatusd"]="${HOME}/.cache/gitstatus/gitstatusd-linux-x86_64 -V || { echo '检查失败'; exit 1; }"
 )
-ordered_keys=("fastfetch" "screen" "conda" "uv" "nvitop" "glances" "gpustat" "zsh" "oh-my-zsh" "oh-my-zsh-plug-autosuggestions" "oh-my-zsh-plug-syntax-highlighting" "oh-my-zsh-theme-powerlevel10k" "oh-my-zsh-theme-powerlevel10k-gitstatusd")
+ordered_keys=("fastfetch" "screen" "conda" "uv" "pipx" "nvitop" "glances" "gpustat" "zsh" "oh-my-zsh" "oh-my-zsh-plug-autosuggestions" "oh-my-zsh-plug-syntax-highlighting" "oh-my-zsh-theme-powerlevel10k" "oh-my-zsh-theme-powerlevel10k-gitstatusd")
 sorted_cmds_keys=$(printf "%s\n" "${!cmds[@]}" | sort | tr '\n' ' ')
 sorted_ordered_keys=$(printf "%s\n" "${ordered_keys[@]}" | sort | tr '\n' ' ')
 if [ "$sorted_cmds_keys" = "$sorted_ordered_keys" ]; then
@@ -128,6 +125,7 @@ for name in "${ordered_keys[@]}"; do
     echo -e "【${name}】\n${version}\n"
 done
 
-mamba clean --all --yes --verbose
-pip cache purge
-uv cache clean
+mamba_clean
+pip_clean
+pipx_clean
+uv_clean
